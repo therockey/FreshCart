@@ -18,7 +18,9 @@ const employeeLinks: NavbarLink[] = [
 const customerLinks: NavbarLink[] = [
   { href: "", label: "Katalog" },
   { href: "/client/cart", label: "Koszyk" },
-  { href: "", label: "Ulubione" },
+  { href: "", label: "Profil" },
+  { href: "/client/loyaltyProg", label: "Program lojalnościowy" },
+  { href: "", label: "Pomoc" },
   { href: "", label: "Wyloguj" },
 ];
 type NavbarItemProps = NavbarLink & {
