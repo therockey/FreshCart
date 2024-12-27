@@ -16,8 +16,8 @@ const employeeLinks: NavbarLink[] = [
   { href: "", label: "Wyloguj" },
 ];
 const customerLinks: NavbarLink[] = [
-  { href: "", label: "Zamówienia" },
-  { href: "", label: "Koszyk" },
+  { href: "", label: "Katalog" },
+  { href: "/client/cart", label: "Koszyk" },
   { href: "", label: "Ulubione" },
   { href: "", label: "Wyloguj" },
 ];

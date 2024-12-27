@@ -1,7 +1,8 @@
+"use client"
 import {getOrder} from "@/api/getOrder";
 import {useQuery} from "@tanstack/react-query";
 
-const MainContent = () => {
+const Page = () => {
     const {isPending, error, data} = useQuery({
         queryKey: ["order"],
         queryFn: () => getOrder("1231"),
@@ -9,7 +10,8 @@ const MainContent = () => {
 
     return (
         <div>
-            <h1>Cart</h1>
+            <h2>Twój koszyk</h2>
+            <h3>Kontynuuj zakupy bądź złóż zamówienie</h3>
             {data &&
                 data.products.map((product, index) => (
                     <div>
@@ -22,4 +24,4 @@ const MainContent = () => {
     );
 };
 
-export default MainContent;
+export default Page;

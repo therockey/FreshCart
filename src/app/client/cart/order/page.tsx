@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { OrderStates } from "@/components/cart/checkout/orderMachine";
+import { OrderStates } from "@/xstate/orderMachine";
 import { useForm } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,7 @@ import {
 } from "@/components/cart/checkout/PaymentPicker";
 import { SuccessPage } from "@/components/cart/checkout/SuccessPage";
 import { Overview } from "@/components/cart/checkout/Overview";
-import {MachineType, useCustomMachine} from "@/hooks/useCustomMachine";
+import { MachineType, useCustomMachine } from "@/hooks/useCustomMachine";
 
 const OrderProcess = () => {
   const { state, ...eventSenders } = useCustomMachine(MachineType.ORDER);
@@ -31,7 +31,6 @@ const OrderProcess = () => {
           {state === OrderStates.OVERVIEW && (
             <>
               <Overview {...eventSenders} />
-              
             </>
           )}
 
