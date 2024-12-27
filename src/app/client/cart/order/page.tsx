@@ -10,11 +10,11 @@ import {
   PaymentPicker,
 } from "@/components/cart/checkout/PaymentPicker";
 import { SuccessPage } from "@/components/cart/checkout/SuccessPage";
-import { useOrderMachine } from "@/components/cart/checkout/useOrderMachine";
 import { Overview } from "@/components/cart/checkout/Overview";
+import {MachineType, useCustomMachine} from "@/hooks/useCustomMachine";
 
 const OrderProcess = () => {
-  const { state, ...eventSenders } = useOrderMachine();
+  const { state, ...eventSenders } = useCustomMachine(MachineType.ORDER);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethods>(
     PaymentMethods.CREDIT_CARD
   );
