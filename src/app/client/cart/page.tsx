@@ -1,5 +1,5 @@
 "use client";
-import { getOrder } from "@/api/getOrder";
+import { getCart } from "@/api/CustomerFetch";
 import CartListItem from "@/components/cart/CartListItem";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -9,7 +9,7 @@ import Link from "next/link";
 const Page = () => {
   const { isPending, error, data } = useQuery({
     queryKey: ["order"],
-    queryFn: () => getOrder("1231"),
+    queryFn: getCart("1231"),
   });
 
   return (

@@ -13,17 +13,17 @@ import {
 } from "@/components/ui/dialog";
 import { Plus, Trash, CogFour, Search, ChartBarTwo } from "@mynaui/icons-react";
 import { useQuery } from "@tanstack/react-query";
-import { getProducts } from "@/api/getProducts";
 import { MachineType, useCustomMachine } from "@/hooks/useCustomMachine";
 import React from "react";
 import { AddProductStates } from "@/xstate/addProductMachine";
 import { ProductNameInput } from "@/components/products/ProductNameInput";
 import { ProductDataInput } from "@/components/products/ProductDataInput";
+import { getProducts } from "@/api/EmployeeFetch";
 
 const ProductsPage = () => {
   const { isPending, error, data } = useQuery({
     queryKey: ["order"],
-    queryFn: () => getProducts(),
+    queryFn: getProducts,
   });
 
   const { state, ...eventSenders } = useCustomMachine(MachineType.ADD_PRODUCT);

@@ -1,15 +1,15 @@
 import React from "react";
-import { getOrder } from "@/api/getOrder";
+import { getCart } from "@/api/CustomerFetch";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Order } from "@/types/Order";
+import { Cart } from "@/types/Cart";
 import { Separator } from "@radix-ui/react-dropdown-menu";
 
 export const Overview = ({ sendBack, sendNext }: any) => {
   const { isPending, error, data } = useQuery({
     queryKey: ["order"],
-    queryFn: () => getOrder("1231"),
+    queryFn: () => getCart("1231"),
   });
 
   if (isPending) {
@@ -20,7 +20,7 @@ export const Overview = ({ sendBack, sendNext }: any) => {
     return <p>Error loading order details.</p>;
   }
 
-  const order = data as Order;
+  const order = data as Cart;
 
   // Calculate total price
   const totalPrice = order.products.reduce((total, product, index) => {

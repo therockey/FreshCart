@@ -1,40 +1,34 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-
-interface LoyaltyProgSettings {
-  greedy: boolean;
-  cumulateUntil: number;
-  useFreeShipping: boolean;
-  switchOffProg: boolean;
-}
+import { LoyaltyProgSettings } from "../../../../types/LoyaltyProgSettings";
+import { getLoyaltyProg, updateLoyaltyProg } from "@/api/CustomerFetch";
+import { useQuery } from "@tanstack/react-query";
 
 enum BooleanOptions {
   greedy = "greedy",
-  useFreeShipping = "useFreeShipping",
+  useFreeDelivery = "useFreeDelivery",
   switchOffProg = "switchOffProg",
 }
 
 const Page = () => {
-  const loyaltyProgSettings: LoyaltyProgSettings = {
-    greedy: true,
-    cumulateUntil: 100,
-    useFreeShipping: true,
-    switchOffProg: false,
-  };
+  const { data: loyaltyProgSettings } = useQuery({
+    queryKey: ["loyaltyProgSettings"],
+    queryFn: getLoyaltyProg("1231"),
+  });
 
   const handleChange = (key: keyof LoyaltyProgSettings, value: boolean) => {
-    // Update the setting for the given key (this can be hooked to state or API later)
     console.log(`Updating ${key} to ${value}`);
+    updateLoyaltyProg("1231", { ...loyaltyProgSettings, [key]: value })();
   };
   const handleNumberChange = (
     key: keyof LoyaltyProgSettings,
     value: number
   ) => {
-    // Update the setting for the given key (this can be hooked to state or API later)
     console.log(`Updating ${key} to ${value}`);
+    updateLoyaltyProg("1231", { ...loyaltyProgSettings, [key]: value })();
   };
-
+  if (!loyaltyProgSettings) return null;
   return (
     <div className="mx-auto max-w-[1200px] flex flex-col justify-center items-center p-5 gap-5">
       <h2 className="text-3xl font-bold w-[50%] text-center my-5">
@@ -128,6 +122,7 @@ const RowForNumberOptions = ({
   const [inputValue, setInputValue] = useState(value);
 
   const handleSave = () => {
+    console.log(`Saving ${inputValue}`);
     onChange(inputValue); // Save the input value to the parent component
   };
 

@@ -1,27 +1,35 @@
+"use client";
+import { getLoyaltyProgStats, getOrderHistory } from "@/api/CustomerFetch";
 import LoyaltyProgStatBadge from "@/components/loyaltyProg/LoyaltyProgStatBadge";
 import OrderHistoryListItem from "@/components/loyaltyProg/OrderHistoryListItem";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
-interface OrderHistoryRecord {
-  id: string;
-  price: number;
-  date: Date;
-}
-const labels = ["Punkty", "Punkty obecne", "Oszczędzone pieniądze"];
+const labels = {
+  totalPoints: "Punkty",
+  currentPoints: "Punkty obecne",
+  savedMoney: "Oszczędzone pieniądze",
+};
 const Page = () => {
-  const badgeProps = [
-    { label: "Łączne zdobyte punkty", value: "123" },
-    { label: "Punkty obecne", value: "123" },
-    { label: "Oszczędzone pieniądze", value: "123zł" },
-  ];
-  const orders: OrderHistoryRecord[] = [
-    { id: "1231", price: 123, date: new Date() },
-    { id: "1232", price: 123, date: new Date() },
-    { id: "1233", price: 123, date: new Date() },
-    { id: "1234", price: 123, date: new Date() },
-  ];
+  const { data: orders } = useQuery({
+    queryKey: ["orderHistory"],
+    queryFn: getOrderHistory("1231"),
+  });
+
+  const { data: loyaltyProgStats } = useQuery({
+    queryKey: ["loyaltyProgStats"],
+    queryFn: getLoyaltyProgStats("1231"),
+  });
+  const badgeProps: { label: string; value: string }[] = Object.entries(
+    labels
+  ).map(([key, value]) => ({
+    label: value,
+    value: loyaltyProgStats
+      ? loyaltyProgStats[key as keyof LoyaltyProgStats].toString()
+      : "",
+  }));
   return (
     <div className="flex justify-center flex-col  text-center p-5 max-w-[1200px] mx-auto gap-4">
       <h2 className="text-4xl font-bold mb-4">Program lojalnościowy</h2>
@@ -35,12 +43,13 @@ const Page = () => {
       </Button>
       <h3 className="text-3xl font-bold my-10">Historia zamówień</h3>
 
-      {orders.map((order) => (
-        <>
-          <OrderHistoryListItem key={order.id} {...order} />
-          <Separator />
-        </>
-      ))}
+      {orders &&
+        orders.map((order) => (
+          <>
+            <OrderHistoryListItem key={order.id} {...order} />
+            <Separator />
+          </>
+        ))}
     </div>
   );
 };
