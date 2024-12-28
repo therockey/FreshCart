@@ -45,10 +45,10 @@ const Page = () => {
 
       {orders &&
         orders.map((order) => (
-          <>
-            <OrderHistoryListItem key={order.id} {...order} />
+          <div key={order.id}>
+            <OrderHistoryListItem {...order} />
             <Separator />
-          </>
+          </div>
         ))}
     </div>
   );

@@ -12,9 +12,7 @@ const Page = () => {
     queryFn: getCart("1231"),
   });
 
-  const {
-    data: priceData,
-  } = useQuery({
+  const { data: priceData } = useQuery({
     queryKey: ["cartPrice"],
     queryFn: getCartPrice("1231"),
   });
@@ -26,14 +24,10 @@ const Page = () => {
       <Separator />
       {cart &&
         cart.products.map((product, index) => (
-          <>
-            <CartListItem
-              key={index}
-              {...product}
-              quantity={cart.quantities[index]}
-            />
+          <div key={index}>
+            <CartListItem {...product} quantity={cart.quantities[index]} />
             <Separator />
-          </>
+          </div>
         ))}
 
       <div className="flex flex-col items-center py-4">
