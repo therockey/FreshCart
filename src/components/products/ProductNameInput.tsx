@@ -1,6 +1,8 @@
 import React from "react";
 import {Button} from "@/components/ui/button";
-import {DialogDescription, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import {DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import {ArrowRight} from "@mynaui/icons-react";
+import {Input} from "@/components/ui/input";
 
 interface ProductNameInputProps {
     sendNext: () => void;
@@ -11,14 +13,12 @@ export const ProductNameInput: React.FC<ProductNameInputProps> = ({sendNext, sen
     return (
         <>
             <DialogHeader>
-                <DialogTitle>Add Product</DialogTitle>
-                <DialogDescription>
-                    Make changes to your profile here. Click save when you're done.
-                </DialogDescription>
+                <DialogTitle>Nazwa produktu</DialogTitle>
             </DialogHeader>
-            <h1>Product Name Input</h1>
-            <Button onClick={sendNext} className="ml-2">
-                Next
+            <Input placeholder="Proszę podać nazwę produktu"/>
+            <Button onClick={sendNext}>
+                Przejdź dalej
+                <ArrowRight/>
             </Button>
         </>
     );
