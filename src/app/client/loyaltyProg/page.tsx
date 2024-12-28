@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
 const labels = {
-  totalPoints: "Punkty",
+  totalPoints: "Suma zdobytych punktów",
   currentPoints: "Punkty obecne",
   savedMoney: "Oszczędzone pieniądze",
 };
@@ -26,15 +26,15 @@ const Page = () => {
     labels
   ).map(([key, value]) => ({
     label: value,
-    value: loyaltyProgStats
-      ? loyaltyProgStats[key as keyof LoyaltyProgStats].toString()
-      : "",
+    value: `${
+      loyaltyProgStats ? loyaltyProgStats[key as keyof LoyaltyProgStats] : "..."
+    } ${key === "savedMoney" ? "zł" : ""}`,
   }));
   return (
     <div className="flex justify-center flex-col  text-center p-5 max-w-[1200px] mx-auto gap-4">
       <h2 className="text-4xl font-bold mb-4">Program lojalnościowy</h2>
       <div className="flex flex-row  justify-between mx-[4rem] my-5">
-        {badgeProps.map((badge, index) => (
+        {badgeProps.map((badge) => (
           <LoyaltyProgStatBadge key={badge.label} {...badge} />
         ))}
       </div>
@@ -45,10 +45,10 @@ const Page = () => {
 
       {orders &&
         orders.map((order) => (
-          <>
-            <OrderHistoryListItem key={order.id} {...order} />
+          <div key={order.id}>
+            <OrderHistoryListItem {...order} />
             <Separator />
-          </>
+          </div>
         ))}
     </div>
   );

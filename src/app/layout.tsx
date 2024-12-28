@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import QueryProvider from "@/components/providers/QueryProvider";
-import { Navbar } from "@/components/Navbar";
+import { Navbar } from "@/components/commons/Navbar";
 export const metadata: Metadata = {
   title: "Freshcart",
   description: "fresher than fresh",

@@ -1,6 +1,6 @@
 export interface LoyaltyProgSettings {
   greedy: boolean;
   cumulateUntil: number;
-  useFreeShipping: boolean;
+  useFreeDelivery: boolean;
   switchOffProg: boolean;
 }

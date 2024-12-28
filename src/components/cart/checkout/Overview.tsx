@@ -9,7 +9,7 @@ import { Separator } from "@radix-ui/react-dropdown-menu";
 export const Overview = ({ sendBack, sendNext }: any) => {
   const { isPending, error, data } = useQuery({
     queryKey: ["order"],
-    queryFn: () => getCart("1231"),
+    queryFn: getCart("1231"),
   });
 
   if (isPending) {
@@ -19,19 +19,17 @@ export const Overview = ({ sendBack, sendNext }: any) => {
   if (error) {
     return <p>Error loading order details.</p>;
   }
-
-  const order = data as Cart;
-
+  if (!data) return <></>;
   // Calculate total price
-  const totalPrice = order.products.reduce((total, product, index) => {
-    const quantity = order.quantities[index];
+  const totalPrice = data.products.reduce((total, product, index) => {
+    const quantity = data.quantities[index];
     return total + product.price * quantity;
   }, 0);
 
   return (
     <div className="p-4">
       <div className="space-y-4">
-        {order.products.map((product, index) => (
+        {data.products.map((product, index) => (
           <>
             <div
               key={product.id || index}
@@ -61,10 +59,10 @@ export const Overview = ({ sendBack, sendNext }: any) => {
               </div>
               <div className="text-right">
                 <p>
-                  Price: ${product.price.toFixed(2)} x {order.quantities[index]}
+                  Price: ${product.price.toFixed(2)} x {data.quantities[index]}
                 </p>
                 <p className="font-bold">
-                  Total: ${(product.price * order.quantities[index]).toFixed(2)}
+                  Total: ${(product.price * data.quantities[index]).toFixed(2)}
                 </p>
               </div>
             </div>{" "}
