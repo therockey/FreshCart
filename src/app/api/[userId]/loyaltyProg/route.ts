@@ -7,7 +7,7 @@ export async function GET(
   const loyaltyProg = {
     greedy: true,
     cumulateUntil: 100,
-    useFreeShipping: true,
+    useFreeDelivery: true,
     switchOffProg: false,
   };
 

@@ -10,7 +10,7 @@ export enum OrderStates {
 
 export const orderMachine = createMachine({
   id: "order",
-  initial: OrderStates.OVERVIEW,
+  initial: OrderStates.ADDRESS,
   states: {
     [OrderStates.OVERVIEW]: {
       on: {
