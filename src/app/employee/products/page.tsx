@@ -17,6 +17,7 @@ import { ProductDataInput } from "@/components/products/ProductDataInput";
 import { Confirmation } from "@/components/products/Confirmation";
 import { getProducts } from "@/api/EmployeeFetch";
 import {SuccessPage} from "@/components/products/SuccessPage";
+import { useForm } from "react-hook-form";
 
 const ProductsPage = () => {
   const { isPending, error, data } = useQuery({
@@ -25,6 +26,14 @@ const ProductsPage = () => {
   });
 
   const { state, ...eventSenders } = useCustomMachine(MachineType.ADD_PRODUCT);
+  const nameFormProps = useForm();
+  const dataFormProps = useForm();
+
+  const { watch: watchNameFormProps } = nameFormProps;
+  const { watch: watchDataFormProps } = dataFormProps;
+
+    console.log("Name Form values:", watchNameFormProps());
+    console.log("Data Form values:", watchDataFormProps());
 
     return (
         <div className="p-5">
@@ -35,10 +44,26 @@ const ProductsPage = () => {
                         <Search/>
                     </Button>
                 </div>
-                <Button type="submit">
-                    <Plus/>
-                    Dodaj produkt
-                </Button>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button type="submit">
+                            <Plus/>
+                            Dodaj produkt
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent onInteractOutside={(e) => e.preventDefault()}>
+                        {state === AddProductStates.NAME && (
+                            <ProductNameInput {...eventSenders} {...nameFormProps}/>
+                        )}
+                        {state === AddProductStates.DATA && (
+                            <ProductDataInput {...eventSenders} {...dataFormProps}/>
+                        )}
+                        {state === AddProductStates.CONFIRM && (
+                            <Confirmation {...eventSenders} productName={watchNameFormProps().name} onConfirm={() => {}}/>
+                        )}
+                        {state === AddProductStates.SUCCESS && <SuccessPage />}
+                    </DialogContent>
+                </Dialog>
             </div>
 
             <div className="flex flex-col gap-2 py-8">
@@ -62,25 +87,9 @@ const ProductsPage = () => {
                                 <Button size="icon" className="bg-primary h-full">
                                     <CogFour/>
                                 </Button>
-                                <Dialog>
-                                    <DialogTrigger asChild>
-                                        <Button size="icon" className="bg-primary h-full">
-                                            <Trash/>
-                                        </Button>
-                                    </DialogTrigger>
-                                    <DialogContent onInteractOutside={(e) => e.preventDefault()}>
-                                        {state === AddProductStates.NAME && (
-                                            <ProductNameInput {...eventSenders} />
-                                        )}
-                                        {state === AddProductStates.DATA && (
-                                            <ProductDataInput {...eventSenders} />
-                                        )}
-                                        {state === AddProductStates.CONFIRM && (
-                                            <Confirmation {...eventSenders} />
-                                        )}
-                                        {state === AddProductStates.SUCCESS && <SuccessPage />}
-                                    </DialogContent>
-                                </Dialog>
+                                <Button size="icon" className="bg-primary h-full">
+                                    <Trash/>
+                                </Button>
                             </div>
                         </div>
                     ))}
