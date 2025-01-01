@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { FormField } from "@/components/commons/FormField";
+import { CustomFormField } from "@/components/commons/CustomFormField";
 import { PaymentMethodButton } from "./PaymentMethodButton";
 export enum PaymentMethods {
   CREDIT_CARD = "Kart płatnicza",
@@ -77,7 +77,7 @@ export const PaymentPicker: React.FC<PaymentPickerProps> = ({
 
       {paymentMethod === PaymentMethods.CREDIT_CARD && (
         <div>
-          <FormField
+          <CustomFormField
             label="Numer karty"
             errorMessage={
               errors.cardNumber?.message && "Nieprawidłowy numer karty"
@@ -90,7 +90,7 @@ export const PaymentPicker: React.FC<PaymentPickerProps> = ({
               },
             })}
           />
-          <FormField
+          <CustomFormField
             label="Data ważności"
             errorMessage={
               errors.expiry?.message && "Data ważności jest wymagana"
@@ -99,7 +99,7 @@ export const PaymentPicker: React.FC<PaymentPickerProps> = ({
               required: "Data ważności jest wymagana",
             })}
           />
-          <FormField
+          <CustomFormField
             label="Właściciel karty"
             errorMessage={
               errors.owner?.message && "Właściciel karty jest wymagany"
@@ -108,7 +108,7 @@ export const PaymentPicker: React.FC<PaymentPickerProps> = ({
               required: "Właściciel karty jest wymagany",
             })}
           />
-          <FormField
+          <CustomFormField
             label="CVV"
             errorMessage={errors.cvv?.message && "Nieprawidłowy CVV"}
             inputProps={register("cvv", {
@@ -123,7 +123,7 @@ export const PaymentPicker: React.FC<PaymentPickerProps> = ({
       )}
 
       {paymentMethod === PaymentMethods.BLIK && (
-        <FormField
+        <CustomFormField
           label="Kod BLIK"
           errorMessage={errors.expiry?.message && "Kod BLIK jest wymagany"}
           inputProps={register("payment", {

@@ -2,7 +2,7 @@ import React from "react";
 import {Button} from "@/components/ui/button";
 import {DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import {ArrowRight} from "@mynaui/icons-react";
-import {FormField} from "@/components/commons/FormField";
+import {CustomFormField} from "@/components/commons/CustomFormField";
 
 interface ProductNameInputProps {
     sendNext: () => void;
@@ -41,7 +41,7 @@ export const ProductNameInput: React.FC<ProductNameInputProps> = ({
             <DialogHeader>
                 <DialogTitle>Nazwa produktu</DialogTitle>
             </DialogHeader>
-            <FormField
+            <CustomFormField
                 label="Nazwa produktu"
                 errorMessage={errors.name?.message && "Nazwa nie może być pusta"}
                 inputProps={register("name", {

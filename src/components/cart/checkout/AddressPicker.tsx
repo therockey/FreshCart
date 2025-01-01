@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { FormField } from "@/components/commons/FormField";
+import { CustomFormField } from "@/components/commons/CustomFormField";
 
 interface AddressPickerProps {
   sendNext: () => void;
@@ -29,7 +29,7 @@ export const AddressPicker: React.FC<AddressPickerProps> = ({
     <form onSubmit={handleSubmit(handleAddress)}>
       <div className="flex flex-col justify-center w-1/2">
         <div className="grid grid-cols-2 gap-10 ">
-          <FormField
+          <CustomFormField
             label="Nr domu i/lub lokalu"
             errorMessage={
               errors.number?.message && "Nie podano numeru domu i/lub lokalu"
@@ -38,28 +38,28 @@ export const AddressPicker: React.FC<AddressPickerProps> = ({
               required: "Nie podano numeru domu i/lub lokalu",
             })}
           />
-          <FormField
+          <CustomFormField
             label="Ulica"
             errorMessage={errors.street?.message && "Nie podano ulicy"}
             inputProps={register("street", {
               required: "Nie podano ulicy",
             })}
           />
-          <FormField
+          <CustomFormField
             label="Kod pocztowy"
             errorMessage={errors.zip?.message && "Nie podano kodu pocztowego"}
             inputProps={register("zip", {
               required: "Nie podano kodu pocztowego",
             })}
           />
-          <FormField
+          <CustomFormField
             label="Miejscowość"
             errorMessage={errors.city?.message && "Nie podano miejscowości"}
             inputProps={register("city", {
               required: "Nie podano miejscowości",
             })}
           />
-          <FormField
+          <CustomFormField
             label="Nr telefonu"
             errorMessage={errors.phone?.message && "Nie podano numeru telefonu"}
             inputProps={register("phone", {

@@ -6,7 +6,7 @@ interface FormFieldProps {
   inputProps: React.InputHTMLAttributes<HTMLInputElement>;
 }
 
-export const FormField: React.FC<FormFieldProps> = ({
+export const CustomFormField: React.FC<FormFieldProps> = ({
   label,
   errorMessage,
   inputProps,

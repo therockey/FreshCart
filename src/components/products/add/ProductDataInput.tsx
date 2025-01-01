@@ -2,7 +2,7 @@ import React from "react";
 import {Button} from "@/components/ui/button";
 import {DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import {ArrowRight, Image} from "@mynaui/icons-react";
-import {FormField} from "@/components/commons/FormField";
+import {CustomFormField} from "@/components/commons/CustomFormField";
 
 interface ProductDataInputProps {
     sendNext: () => void;
@@ -57,7 +57,7 @@ export const ProductDataInput: React.FC<ProductDataInputProps> = ({
             <div className="flex flex-col justify-center space-y-4">
                 <div className="flex flex-row space-x-2.5 justify-between">
                     <div className="flex flex-row space-x-2.5">
-                        <FormField
+                        <CustomFormField
                             label="Cena"
                             errorMessage={errors.price?.message && "Cena nie może być <= 0"}
                             inputProps={{
@@ -72,7 +72,7 @@ export const ProductDataInput: React.FC<ProductDataInputProps> = ({
                         <div className="h-fit pt-7">zł</div>
                     </div>
                     <div className="flex flex-row space-x-2.5">
-                        <FormField
+                        <CustomFormField
                             label="Waga"
                             errorMessage={errors.weight?.message && "Waga nie może być <= 0"}
                             inputProps={{
@@ -87,7 +87,7 @@ export const ProductDataInput: React.FC<ProductDataInputProps> = ({
                     </div>
                 </div>
                 <div className="flex flex-col space-y-2">
-                    <FormField
+                    <CustomFormField
                         label="Opis"
                         errorMessage={errors.description?.message && "Opis nie może być pusty"}
                         inputProps={register("description", {

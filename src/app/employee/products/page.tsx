@@ -12,28 +12,33 @@ import { useQuery } from "@tanstack/react-query";
 import { MachineType, useCustomMachine } from "@/hooks/useCustomMachine";
 import React from "react";
 import { AddProductStates } from "@/xstate/addProductMachine";
-import { ProductNameInput } from "@/components/products/ProductNameInput";
-import { ProductDataInput } from "@/components/products/ProductDataInput";
-import { Confirmation } from "@/components/products/Confirmation";
+import { UpdateStockStates } from "@/xstate/updateStockMachine";
+import { ProductNameInput } from "@/components/products/add/ProductNameInput";
+import { ProductDataInput } from "@/components/products/add/ProductDataInput";
+import { Confirmation } from "@/components/products/add/Confirmation";
+import { DepotPicker } from "@/components/products/updateStock/DepotPicker";
 import { getProducts } from "@/api/EmployeeFetch";
-import {SuccessPage} from "@/components/products/SuccessPage";
+import {SuccessPage} from "@/components/products/add/SuccessPage";
 import { useForm } from "react-hook-form";
 
 const ProductsPage = () => {
   const { isPending, error, data } = useQuery({
-    queryKey: ["order"],
+    queryKey: ["products"],
     queryFn: getProducts,
   });
 
-  const { state, ...eventSenders } = useCustomMachine(MachineType.ADD_PRODUCT);
+  const { state: addState, ...eventSenders } = useCustomMachine(MachineType.ADD_PRODUCT);
   const nameFormProps = useForm();
   const dataFormProps = useForm();
+
+  const { state: updateStockState, ...updateStockEventSenders } = useCustomMachine(MachineType.UPDATE_STOCK);
+  const updateStockFormProps = useForm();
 
   const { watch: watchNameFormProps } = nameFormProps;
   const { watch: watchDataFormProps } = dataFormProps;
 
-    console.log("Name Form values:", watchNameFormProps());
-    console.log("Data Form values:", watchDataFormProps());
+  console.log("Name Form values:", watchNameFormProps());
+  console.log("Data Form values:", watchDataFormProps());
 
     return (
         <div className="p-5">
@@ -52,16 +57,16 @@ const ProductsPage = () => {
                         </Button>
                     </DialogTrigger>
                     <DialogContent onInteractOutside={(e) => e.preventDefault()}>
-                        {state === AddProductStates.NAME && (
+                        {addState === AddProductStates.NAME && (
                             <ProductNameInput {...eventSenders} {...nameFormProps}/>
                         )}
-                        {state === AddProductStates.DATA && (
+                        {addState === AddProductStates.DATA && (
                             <ProductDataInput {...eventSenders} {...dataFormProps}/>
                         )}
-                        {state === AddProductStates.CONFIRM && (
+                        {addState === AddProductStates.CONFIRM && (
                             <Confirmation {...eventSenders} productName={watchNameFormProps().name} onConfirm={() => {}}/>
                         )}
-                        {state === AddProductStates.SUCCESS && <SuccessPage />}
+                        {addState === AddProductStates.SUCCESS && <SuccessPage />}
                     </DialogContent>
                 </Dialog>
             </div>
@@ -78,12 +83,23 @@ const ProductsPage = () => {
                                 <div className="content-center">{product.name}</div>
                             </div>
 
-                            {/* Action Buttons */}
                             <div className="flex space-x-2.5">
-                                <Button className="bg-secondary h-full">
-                                    <ChartBarTwo/>
-                                    Zarządzaj stanem
-                                </Button>
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <Button className="bg-secondary h-full">
+                                            <ChartBarTwo/>
+                                            Zarządzaj stanem
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogContent onInteractOutside={(e) => e.preventDefault()}>
+                                        {updateStockState === UpdateStockStates.DEPOT && (
+                                            <DepotPicker {...updateStockEventSenders} {...updateStockFormProps}/>
+                                        )}
+                                        {updateStockState === UpdateStockStates.STOCK && (
+                                            <ProductDataInput {...updateStockEventSenders} {...updateStockFormProps}/>
+                                        )}
+                                    </DialogContent>
+                                </Dialog>
                                 <Button size="icon" className="bg-primary h-full">
                                     <CogFour/>
                                 </Button>
