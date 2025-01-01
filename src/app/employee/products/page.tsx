@@ -45,13 +45,13 @@ const ProductsPage = () => {
             <div className="flex w-full items-center space-x-10">
                 <div className="flex w-full items-center space-x-2">
                     <Input type="search" placeholder="ID lub nazwa produktu"/>
-                    <Button type="submit">
+                    <Button type="submit" className="hover:bg-accent">
                         <Search/>
                     </Button>
                 </div>
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button type="submit">
+                        <Button type="submit" className="hover:bg-accent">
                             <Plus/>
                             Dodaj produkt
                         </Button>
@@ -76,7 +76,7 @@ const ProductsPage = () => {
                     data.map((product) => (
                         <div
                             key={product.id}
-                            className="flex flex-row justify-between py-2.5 px-5 rounded bg-accent h-16"
+                            className="flex flex-row justify-between py-2.5 px-5 rounded bg-card h-16"
                         >
                             <div className="flex flex-row space-x-5">
                                 <div className="content-center font-bold">ID: {product.id}</div>
@@ -86,7 +86,7 @@ const ProductsPage = () => {
                             <div className="flex space-x-2.5">
                                 <Dialog>
                                     <DialogTrigger asChild>
-                                        <Button className="bg-secondary h-full">
+                                        <Button className="bg-secondary h-full hover:bg-accent">
                                             <ChartBarTwo/>
                                             Zarządzaj stanem
                                         </Button>
@@ -100,10 +100,10 @@ const ProductsPage = () => {
                                         )}
                                     </DialogContent>
                                 </Dialog>
-                                <Button size="icon" className="bg-primary h-full">
+                                <Button size="icon" className="bg-primary h-full hover:bg-accent">
                                     <CogFour/>
                                 </Button>
-                                <Button size="icon" className="bg-primary h-full">
+                                <Button size="icon" className="bg-primary h-full hover:bg-accent">
                                     <Trash/>
                                 </Button>
                             </div>

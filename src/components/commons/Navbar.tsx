@@ -44,7 +44,7 @@ export const Navbar = () => {
     : "Witamy w FreshCart";
   const links = isEmployee ? employeeLinks : customerLinks;
   return (
-    <div className="flex justify-between content-center px-4 py-8 bg-accent font-bold">
+    <div className="flex justify-between content-center px-4 py-8 bg-card font-bold">
       <h1 className="text-xl">{title}</h1>
       <nav className="flex flex-row gap-5">
         {links.map((link) => (
