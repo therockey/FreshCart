@@ -4,7 +4,6 @@ export enum UpdateStockStates {
     DEPOT = "depot",
     STOCK = "stock",
     SUCCESS = "success",
-    EXIT = "exit",
 }
 
 export const updateStockMachine = createMachine({
@@ -14,7 +13,6 @@ export const updateStockMachine = createMachine({
         [UpdateStockStates.DEPOT]: {
             on: {
                 NEXT: UpdateStockStates.STOCK,
-                BACK: UpdateStockStates.EXIT,
             },
         },
         [UpdateStockStates.STOCK]: {
@@ -23,11 +21,9 @@ export const updateStockMachine = createMachine({
                 NEXT: UpdateStockStates.SUCCESS,
             },
         },
-        [UpdateStockStates.SUCCESS]: {
-            type: "final",
-        },
-        [UpdateStockStates.EXIT]: {
-            type: "final",
-        },
+        [UpdateStockStates.SUCCESS]: {},
+    },
+    on: {
+        RESET: `.${UpdateStockStates.DEPOT}`,
     },
 });

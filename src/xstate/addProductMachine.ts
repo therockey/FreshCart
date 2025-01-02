@@ -5,7 +5,6 @@ export enum AddProductStates {
   DATA = "data",
   CONFIRM = "confirm",
   SUCCESS = "success",
-  EXIT = "exit",
 }
 
 export const addProductMachine = createMachine({
@@ -15,7 +14,6 @@ export const addProductMachine = createMachine({
     [AddProductStates.NAME]: {
       on: {
         NEXT: AddProductStates.DATA,
-        BACK: AddProductStates.EXIT,
       },
     },
     [AddProductStates.DATA]: {
@@ -30,11 +28,9 @@ export const addProductMachine = createMachine({
         NEXT: AddProductStates.SUCCESS,
       },
     },
-    [AddProductStates.SUCCESS]: {
-      type: "final",
-    },
-    [AddProductStates.EXIT]: {
-      type: "final",
-    },
+    [AddProductStates.SUCCESS]: {},
   },
+  on: {
+    RESET: `.${AddProductStates.NAME}`,
+  }
 });

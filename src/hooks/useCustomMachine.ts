@@ -27,5 +27,6 @@ export const useCustomMachine = (machineType: MachineType) => {
     state: state.value,
     sendBack: () => send({ type: "BACK" }),
     sendNext: () => send({ type: "NEXT" }),
+    resetState: () => send({ type: "RESET" })
   };
 };

@@ -59,7 +59,7 @@ export const DepotPicker: React.FC<any> = ({
                             </FormItem>
                         )}
                     />
-                    <Button type="submit" className="w-full">
+                    <Button type="submit" className="w-full hover:bg-accent">
                         Przejdź dalej
                         <ArrowRight/>
                     </Button>

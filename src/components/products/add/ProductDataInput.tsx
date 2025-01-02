@@ -25,27 +25,20 @@ export const ProductDataInput: React.FC<ProductDataInputProps> = ({
                                                                       register,
                                                                       formState: {errors},
                                                                   }) => {
-    const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
 
     const handleData = (data: any) => {
         if (!data.price || data.price <= 0) {
-            setErrorMessage("Cena nie może być <= 0");
-
-            console.log(errorMessage)
             return;
         }
 
         if (!data.weight || data.weight <= 0) {
-            setErrorMessage("Waga nie może być <= 0");
             return;
         }
 
         if (!data.description) {
-            setErrorMessage("Opis nie może być pusty");
             return;
         }
 
-        setErrorMessage(null);
         sendNext();
     };
 

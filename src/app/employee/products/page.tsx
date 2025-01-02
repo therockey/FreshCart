@@ -1,44 +1,42 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
 import {
     Dialog,
     DialogTrigger,
     DialogContent,
 } from "@/components/ui/dialog";
-import { Plus, Trash, CogFour, Search, ChartBarTwo } from "@mynaui/icons-react";
-import { useQuery } from "@tanstack/react-query";
-import { MachineType, useCustomMachine } from "@/hooks/useCustomMachine";
+import {Plus, Trash, CogFour, Search, ChartBarTwo} from "@mynaui/icons-react";
+import {useQuery} from "@tanstack/react-query";
+import {MachineType, useCustomMachine} from "@/hooks/useCustomMachine";
 import React from "react";
-import { AddProductStates } from "@/xstate/addProductMachine";
-import { UpdateStockStates } from "@/xstate/updateStockMachine";
-import { ProductNameInput } from "@/components/products/add/ProductNameInput";
-import { ProductDataInput } from "@/components/products/add/ProductDataInput";
-import { Confirmation } from "@/components/products/add/Confirmation";
-import { DepotPicker } from "@/components/products/updateStock/DepotPicker";
-import { getProducts } from "@/api/EmployeeFetch";
+import {AddProductStates} from "@/xstate/addProductMachine";
+import {UpdateStockStates} from "@/xstate/updateStockMachine";
+import {ProductNameInput} from "@/components/products/add/ProductNameInput";
+import {ProductDataInput} from "@/components/products/add/ProductDataInput";
+import {Confirmation} from "@/components/products/add/Confirmation";
+import {DepotPicker} from "@/components/products/updateStock/DepotPicker";
+import {getProducts} from "@/api/EmployeeFetch";
 import {SuccessPage} from "@/components/products/add/SuccessPage";
-import { useForm } from "react-hook-form";
+import {useForm} from "react-hook-form";
+import {ChangeStock} from "@/components/products/updateStock/ChangeStock";
+import {StockUpdateSuccess} from "@/components/products/updateStock/StockUpdateSuccess";
 
 const ProductsPage = () => {
-  const { isPending, error, data } = useQuery({
-    queryKey: ["products"],
-    queryFn: getProducts,
-  });
+    const {isPending, error, data} = useQuery({
+        queryKey: ["products"],
+        queryFn: getProducts,
+    });
 
-  const { state: addState, ...eventSenders } = useCustomMachine(MachineType.ADD_PRODUCT);
-  const nameFormProps = useForm();
-  const dataFormProps = useForm();
+    const {state: addState, ...eventSenders} = useCustomMachine(MachineType.ADD_PRODUCT);
+    const nameFormProps = useForm();
+    const dataFormProps = useForm();
 
-  const { state: updateStockState, ...updateStockEventSenders } = useCustomMachine(MachineType.UPDATE_STOCK);
-  const updateStockFormProps = useForm();
+    const {state: updateStockState, ...updateStockEventSenders} = useCustomMachine(MachineType.UPDATE_STOCK);
+    const updateStockFormProps = useForm();
 
-  const { watch: watchNameFormProps } = nameFormProps;
-  const { watch: watchDataFormProps } = dataFormProps;
-
-  console.log("Name Form values:", watchNameFormProps());
-  console.log("Data Form values:", watchDataFormProps());
+    const {watch: watchNameFormProps} = nameFormProps;
 
     return (
         <div className="p-5">
@@ -51,7 +49,11 @@ const ProductsPage = () => {
                 </div>
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button type="submit" className="hover:bg-accent">
+                        <Button className="hover:bg-accent" onClick={() => {
+                            nameFormProps.reset();
+                            dataFormProps.reset();
+                            eventSenders.resetState();
+                        }}>
                             <Plus/>
                             Dodaj produkt
                         </Button>
@@ -64,9 +66,10 @@ const ProductsPage = () => {
                             <ProductDataInput {...eventSenders} {...dataFormProps}/>
                         )}
                         {addState === AddProductStates.CONFIRM && (
-                            <Confirmation {...eventSenders} productName={watchNameFormProps().name} onConfirm={() => {}}/>
+                            <Confirmation {...eventSenders} productName={watchNameFormProps().name} onConfirm={() => {
+                            }}/>
                         )}
-                        {addState === AddProductStates.SUCCESS && <SuccessPage />}
+                        {addState === AddProductStates.SUCCESS && <SuccessPage/>}
                     </DialogContent>
                 </Dialog>
             </div>
@@ -86,7 +89,11 @@ const ProductsPage = () => {
                             <div className="flex space-x-2.5">
                                 <Dialog>
                                     <DialogTrigger asChild>
-                                        <Button className="bg-secondary h-full hover:bg-accent">
+                                        <Button className="bg-secondary h-full hover:bg-accent"
+                                                onClick={() => {
+                                                    updateStockFormProps.reset();
+                                                    updateStockEventSenders.resetState();
+                                                }}>
                                             <ChartBarTwo/>
                                             Zarządzaj stanem
                                         </Button>
@@ -96,8 +103,11 @@ const ProductsPage = () => {
                                             <DepotPicker {...updateStockEventSenders} {...updateStockFormProps}/>
                                         )}
                                         {updateStockState === UpdateStockStates.STOCK && (
-                                            <ProductDataInput {...updateStockEventSenders} {...updateStockFormProps}/>
+                                            <ChangeStock  {...updateStockEventSenders} {...updateStockFormProps}
+                                                          onConfirm={() => {
+                                                          }}/>
                                         )}
+                                        {updateStockState === UpdateStockStates.SUCCESS && <StockUpdateSuccess/>}
                                     </DialogContent>
                                 </Dialog>
                                 <Button size="icon" className="bg-primary h-full hover:bg-accent">
