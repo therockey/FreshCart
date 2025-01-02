@@ -1,6 +1,8 @@
+import { testDbConnection } from "@/lib/db";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
+  const isConnected = await testDbConnection();
   const cart = {
     products: [
       {

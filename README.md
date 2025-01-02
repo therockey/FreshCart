@@ -1,5 +1,15 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+.env:
+
+```
+DB_USER=your_username
+DB_HOST=your_database_host
+DB_NAME=your_database_name
+DB_PASSWORD=your_password
+DB_PORT=5432
+```
+
 ## Getting Started
 
 First, run the development server:
