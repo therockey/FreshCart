@@ -6,6 +6,10 @@ FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP
 END LOOP;
 END $$;
 
-DROP TYPE IF EXISTS kategoriaproduktu CASCADE;
-
-DROP TYPE IF EXISTS platnoscielektroniczna CASCADE;
+DO $$ DECLARE
+    r RECORD;
+BEGIN
+    FOR r IN (SELECT typname FROM pg_type WHERE typnamespace = 'public'::regnamespace) LOOP
+            EXECUTE 'DROP TYPE IF EXISTS ' || quote_ident(r.typname) || ' CASCADE';
+        END LOOP;
+END $$;
