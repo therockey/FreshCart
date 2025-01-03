@@ -1,13 +1,35 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-.env:
+### Docker rebuild
+
+```docker-compose down
+docker volume rm freshcart-fe_postgres_data
+docker-compose up
+```
+
+### Pull schemas to prisma
 
 ```
-DB_USER=your_username
-DB_HOST=your_database_host
-DB_NAME=your_database_name
-DB_PASSWORD=your_password
+npx prisma db pull
+npx prisma generate
+```
+
+### Test connection from console (adjust envs)
+
+```
+docker exec -it postgres_db psql -U postgres -d freshcart
+SELECT * FROM "SystemUser";
+```
+
+### .env:
+
+```
+DB_HOST=localhost
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=freshcart
 DB_PORT=5432
+DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=public
 ```
 
 ## Getting Started

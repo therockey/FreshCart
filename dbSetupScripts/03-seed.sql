@@ -1,0 +1,3 @@
+-- lets add seeding sql script in here
+-- specjalnie dla ciebie
+-- pozdrawiam serdecznie - poziomk3 

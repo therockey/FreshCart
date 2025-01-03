@@ -2,21 +2,23 @@ version: '3.9'
 
 services:
   postgres:
-    image: postgres:15  # Replace with the version you want
+    image: postgres:15
     container_name: postgres_db
     environment:
-      POSTGRES_USER: your_username
-      POSTGRES_PASSWORD: your_password
-      POSTGRES_DB: your_database
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
-      - "5432:5432"
+      - "${DB_PORT}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./dbSetupScripts:/docker-entrypoint-initdb.d
     networks:
       - app_network
 
 volumes:
   postgres_data:
+
 
 networks:
   app_network:

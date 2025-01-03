@@ -1,8 +1,27 @@
-import { testDbConnection } from "@/lib/db";
 import { NextRequest } from "next/server";
-
+import { prisma } from "@/lib/prisma";
+// const prisma = new PrismaClient();
 export async function GET(request: NextRequest) {
-  const isConnected = await testDbConnection();
+  const clientId = 1; // Replace with the desired client ID
+
+  const clientCart = await prisma.client.findUnique({
+    where: {
+      fk_system_user_id: clientId,
+    },
+    include: {
+      Cart: {
+        include: {
+          CartProducts: {
+            include: {
+              Product: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  console.log(clientCart?.Cart?.CartProducts);
   const cart = {
     products: [
       {

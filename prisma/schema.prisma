@@ -1,0 +1,217 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Cart {
+  id           Int            @id @default(autoincrement())
+  created_at   DateTime?      @db.Date
+  CartProducts CartProducts[]
+  Client       Client[]
+}
+
+model CartProducts {
+  id            Int     @id @default(autoincrement())
+  fk_product_id Int
+  fk_cart_id    Int
+  quantity      Int     @default(1)
+  Cart          Cart    @relation(fields: [fk_cart_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Product       Product @relation(fields: [fk_product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Client {
+  fk_system_user_id      Int                     @id @default(autoincrement())
+  email                  String                  @db.VarChar(255)
+  address                Unsupported("address")?
+  fk_loyalty_settings_id Int?
+  fk_loyalty_stats_id    Int?
+  fk_cart_id             Int?
+  Cart                   Cart?                   @relation(fields: [fk_cart_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  LoyaltyProgramSettings LoyaltyProgramSettings? @relation(fields: [fk_loyalty_settings_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  LoyaltyProgramStats    LoyaltyProgramStats?    @relation(fields: [fk_loyalty_stats_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  SystemUser             SystemUser              @relation(fields: [fk_system_user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Order                  Order[]
+}
+
+model Complaint {
+  id           Int       @id @default(autoincrement())
+  reason       String    @db.VarChar(1000)
+  created_at   DateTime? @db.Date
+  fk_order_id  Int
+  fk_return_id Int
+  Order        Order     @relation(fields: [fk_order_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Return       Return    @relation(fields: [fk_return_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Delivery {
+  id                      Int             @id @default(autoincrement())
+  delivery_status         DELIVERY_STATUS
+  delivery_date           DateTime?       @db.Date
+  fk_delivered_order_id   Int
+  fk_delivery_employee_id Int?
+  Order                   Order           @relation(fields: [fk_delivered_order_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Employee                Employee?       @relation(fields: [fk_delivery_employee_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Depot {
+  id           Int            @id @default(autoincrement())
+  created_at   DateTime?      @db.Date
+  updated_at   DateTime?      @db.Date
+  name         String         @db.VarChar(255)
+  address      String         @db.VarChar(255)
+  ProductStock ProductStock[]
+}
+
+model Discount {
+  id              Int               @id @default(autoincrement())
+  percentage      Int?
+  value           Float?            @db.Real
+  ProductDiscount ProductDiscount[]
+}
+
+model Employee {
+  id         Int        @id @default(autoincrement())
+  name       String?    @db.VarChar(255)
+  surname    String?    @db.VarChar(255)
+  Delivery   Delivery[]
+  SystemUser SystemUser @relation(fields: [id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Order      Order[]
+  Return     Return[]
+}
+
+model LoyaltyProgramSettings {
+  id              Int      @id @default(autoincrement())
+  fk_client_id    Int
+  is_greedy       Boolean?
+  point_threshold Int?
+  free_delivery   Boolean?
+  is_active       Boolean  @default(true)
+  Client          Client[]
+}
+
+model LoyaltyProgramStats {
+  id          Int      @id @default(autoincrement())
+  current_pts Int?
+  total_pts   Int?
+  money_saved Float?   @db.Real
+  total_spent Float?   @db.Real
+  Client      Client[]
+}
+
+model Order {
+  id                  Int                    @id @default(autoincrement())
+  created_at          DateTime               @db.Date
+  address             Unsupported("address")
+  loyaltyPointsGained Int?
+  freeDelivery        Boolean
+  status              ORDER_STATUS
+  price               Float                  @db.Real
+  fk_client_id        Int
+  fk_employee_id      Int?
+  contact_phone_num   String?                @db.VarChar(255)
+  payment_method      PAYMENT_METHOD?
+  Complaint           Complaint[]
+  Delivery            Delivery[]
+  Client              Client                 @relation(fields: [fk_client_id], references: [fk_system_user_id], onDelete: NoAction, onUpdate: NoAction)
+  Employee            Employee?              @relation(fields: [fk_employee_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  OrderProducts       OrderProducts[]
+}
+
+model OrderProducts {
+  id                     Int     @id @default(autoincrement())
+  fk_product_id          Int
+  fk_containing_order_id Int
+  Order                  Order   @relation(fields: [fk_containing_order_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Product                Product @relation(fields: [fk_product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model Product {
+  id              Int               @id @default(autoincrement())
+  price           Float             @db.Real
+  weight          Float             @db.Real
+  description     String            @db.VarChar(1000)
+  category        PRODUCT_CATEGORY
+  created_at      DateTime          @db.Date
+  name            String            @db.VarChar(255)
+  CartProducts    CartProducts[]
+  OrderProducts   OrderProducts[]
+  ProductDiscount ProductDiscount[]
+  ProductStock    ProductStock[]
+}
+
+model ProductDiscount {
+  id             Int      @id @default(autoincrement())
+  fk_discount_id Int
+  fk_product_id  Int
+  Product        Product  @relation(fields: [fk_discount_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Discount       Discount @relation(fields: [fk_product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model ProductStock {
+  id            Int      @id @default(autoincrement())
+  fk_product_id Int
+  fk_depot_id   Int
+  quantity      Int
+  updated_at    DateTime @default(now()) @db.Timestamp(6)
+  Depot         Depot    @relation(fields: [fk_depot_id], references: [id], onDelete: Cascade)
+  Product       Product  @relation(fields: [fk_product_id], references: [id], onDelete: Cascade)
+
+  @@unique([fk_product_id, fk_depot_id])
+}
+
+model Return {
+  id                    Int                    @id @default(autoincrement())
+  pickup_address        Unsupported("address")
+  pickup_date           DateTime               @db.Date
+  fk_pickup_employee_id Int
+  Complaint             Complaint[]
+  Employee              Employee               @relation(fields: [fk_pickup_employee_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model SystemUser {
+  id        Int       @id @default(autoincrement())
+  login     String    @db.VarChar(255)
+  password  String    @db.VarChar(255)
+  phone_num String?   @db.VarChar(255)
+  Client    Client?
+  Employee  Employee?
+}
+
+enum DELIVERY_STATUS {
+  packing
+  ready_to_ship @map("ready to ship")
+  en_route      @map("en route")
+  delivered
+}
+
+enum ORDER_STATUS {
+  completed
+  returned
+  ready_to_go       @map("ready to go")
+  awaiting
+  awaiting_delivery @map("awaiting delivery")
+  ready_to_ship     @map("ready to ship")
+}
+
+enum PAYMENT_METHOD {
+  Blik
+  Visa
+  MasterCard
+  Amex
+  Wire_transfer @map("Wire transfer")
+}
+
+enum PRODUCT_CATEGORY {
+  sery
+  jogurty
+  twarogi
+  mleko
+  mas_a   @map("masła")
+  inne
+  mietany @map("śmietany")
+}
