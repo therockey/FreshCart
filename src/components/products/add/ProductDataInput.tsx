@@ -1,6 +1,6 @@
 import React from "react";
 import {Button} from "@/components/ui/button";
-import {DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import {DialogClose, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import {ArrowRight, Image} from "@mynaui/icons-react";
 import {CustomFormField} from "@/components/commons/CustomFormField";
 import {
@@ -15,7 +15,6 @@ import {ProductCategory} from "@/service";
 
 export const ProductDataInput: React.FC<any> = ({
                                                     sendNext,
-                                                    sendBack,
                                                     formState: {errors},
                                                     ...rest
                                                 }) => {
@@ -30,6 +29,10 @@ export const ProductDataInput: React.FC<any> = ({
         }
 
         if (!data.description) {
+            return;
+        }
+
+        if (!data.category) {
             return;
         }
 
@@ -84,24 +87,15 @@ export const ProductDataInput: React.FC<any> = ({
                             })}
                         />
                     </div>
-                    <div className="flex flex-col space-y-2">
-                        <CustomFormField
-                            label="Opis"
-                            errorMessage={errors.description?.message && "Opis nie może być pusty"}
-                            inputProps={rest.register("description", {
-                                required: "Opis nie może być pusty"
-                            })}
-                        />
-                    </div>
                     <FormField
                         control={rest.control}
-                        name="depot"
+                        name="category"
                         render={({field}) => (
                             <FormItem>
                                 <Select onValueChange={field.onChange} defaultValue={field.value} required>
                                     <FormControl>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Proszę wybrać magazyn"/>
+                                            <SelectValue placeholder="Proszę wybrać kategorię"/>
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
@@ -116,14 +110,21 @@ export const ProductDataInput: React.FC<any> = ({
                             </FormItem>
                         )}
                     />
-                    <Button onClick={sendBack} className="bg-muted text-white">
+                    <Button className="bg-muted hover:bg-accent">
                         <Image/>
                         Przekaż zdjęcie
                     </Button>
-                    <Button type="submit">
-                        Dodaj produkt
-                        <ArrowRight/>
-                    </Button>
+                    <div className="flex flex-row justify-between">
+                        <DialogClose asChild>
+                            <Button className="bg-secondary hover:bg-accent w-48">
+                                Anuluj
+                            </Button>
+                        </DialogClose>
+                        <Button type="submit" className="w-48 hover:bg-accent">
+                            Dodaj produkt
+                            <ArrowRight/>
+                        </Button>
+                    </div>
                 </div>
             </form>
         </Form>

@@ -11,7 +11,7 @@ export const SuccessPage: React.FC = () => {
             <div className="flex flex-col content-center space-y-4">
                 <h1>Produkt pomyślnie dodany!</h1>
                 <DialogClose asChild>
-                    <Button>Ok</Button>
+                    <Button className="hover:bg-accent">Ok</Button>
                 </DialogClose>
             </div>
         </>

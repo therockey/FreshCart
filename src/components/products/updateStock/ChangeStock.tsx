@@ -3,6 +3,8 @@ import {Button} from "@/components/ui/button";
 import {DialogClose, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import {Edit} from "@mynaui/icons-react";
 import {CustomFormField} from "@/components/commons/CustomFormField";
+import {useQuery} from "@tanstack/react-query";
+import {getStock} from "@/api/EmployeeFetch";
 
 interface ChangeStockProps {
     sendNext: () => void;
@@ -16,6 +18,8 @@ interface ChangeStockProps {
         errors: Record<string, any>;
     };
     onConfirm: () => void;
+    depotId: string;
+    productId: string;
 }
 
 export const ChangeStock: React.FC<ChangeStockProps> = ({
@@ -25,10 +29,19 @@ export const ChangeStock: React.FC<ChangeStockProps> = ({
                                                             register,
                                                             formState: {errors},
                                                             onConfirm,
+                                                            depotId,
+                                                            productId,
                                                         }) => {
 
+    const {isPending, error, data} = useQuery({
+        queryKey: ["stock", productId, depotId],
+        queryFn: getStock(productId, depotId),
+    });
+
+    console.log(data);
+
     const handleStock = (data: any) => {
-        if (!data.stock || data.stock <= 0) {
+        if (!data.quantity || data.quantity <= 0) {
             return;
         }
 
@@ -53,30 +66,31 @@ export const ChangeStock: React.FC<ChangeStockProps> = ({
                 </div>
                 <div className="flex flex-col space-y-0.5">
                     <div className="font-bold">Aktualny stan magazynowy</div>
-                    <div className="text-2xl font-thin">1238 szt.</div>
+                    <div className="text-2xl font-thin">{data?.quantity}</div>
                 </div>
                 <div className="flex flex-row space-x-2.5  px-10">
-                    <CustomFormField
+                    {data && <CustomFormField
                         className="w-full"
                         label="Podaj nowy stan magazynowy"
-                        errorMessage={errors.stock?.message && "Stan magazynowy nie może być <= 0"}
+                        errorMessage={errors.quantity?.message && "Stan magazynowy nie może być <= 0"}
                         inputProps={{
-                            ...register("stock", {
+                            ...register("quantity", {
+                                value: data?.quantity,
                                 required: "Stan magazynowy nie może być <= 0",
                             }),
                             type: "number",
                             min: "0",
                         }}
-                    />
+                    />}
                     <div className="h-fit pt-7">szt.</div>
                 </div>
-                <div className="flex flex-row justify-between px-5">
+                <div className="flex flex-row justify-between">
                     <DialogClose asChild>
-                        <Button className="bg-secondary hover:bg-accent w-40">
+                        <Button className="bg-secondary hover:bg-accent w-48">
                             Anuluj
                         </Button>
                     </DialogClose>
-                    <Button className="hover:bg-accent w-40" type="submit">
+                    <Button className="hover:bg-accent w-48" type="submit">
                         <Edit/>
                         Zapisz
                     </Button>
