@@ -1,22 +1,14 @@
 import { NextRequest } from "next/server";
+import {addProduct, getProducts, NewProductDTO} from "@/service";
 
 export async function GET(request: NextRequest) {
-  const products = [
-    {
-        id: 1,
-      name: "product1",
-      price: 10,
-    },
-    {
-        id: 2,
-      name: "product2",
-      price: 20,
-    },
-  ];
+  const products = await getProducts();
 
   return Response.json(products);
 }
 
 export async function POST(request: NextRequest) {
-  return Response.json({ message: "Product created" });
+    const res = await request.json();
+    const data = await addProduct(res as NewProductDTO);
+    return Response.json(data);
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import {Button} from "@/components/ui/button";
-import {DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import {DialogClose, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import {ArrowRight} from "@mynaui/icons-react";
 import {useQuery} from "@tanstack/react-query";
 import {getDepots} from "@/api/EmployeeFetch";
@@ -12,11 +12,10 @@ import {
     Form,
 } from "@/components/ui/form";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import {Depot} from "@/types/Depot";
+import {Depot} from "@/service";
 
 export const DepotPicker: React.FC<any> = ({
                                                sendNext,
-                                               sendBack,
                                                ...rest
                                            }) => {
 
@@ -49,7 +48,7 @@ export const DepotPicker: React.FC<any> = ({
                                     </FormControl>
                                     <SelectContent>
                                         {data?.map((depot: Depot) => (
-                                            <SelectItem key={depot.id} value={depot.id}>
+                                            <SelectItem key={depot.id} value={depot.id.toString()}>
                                                 {depot.name}
                                             </SelectItem>
                                         ))}
@@ -59,10 +58,17 @@ export const DepotPicker: React.FC<any> = ({
                             </FormItem>
                         )}
                     />
-                    <Button type="submit" className="w-full hover:bg-accent">
-                        Przejdź dalej
-                        <ArrowRight/>
-                    </Button>
+                    <div className="flex flex-row justify-between">
+                        <DialogClose asChild>
+                            <Button className="bg-secondary hover:bg-accent w-48">
+                                Anuluj
+                            </Button>
+                        </DialogClose>
+                        <Button type="submit" className="w-48 hover:bg-accent">
+                            Przejdź dalej
+                            <ArrowRight/>
+                        </Button>
+                    </div>
                 </form>
             </Form>
         </>

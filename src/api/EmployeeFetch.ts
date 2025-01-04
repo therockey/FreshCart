@@ -1,5 +1,4 @@
-import { Product } from "@/types/Product";
-import { Depot } from "@/types/Depot";
+import {Depot, GetProductStockType, NewProductDTO, Product, ProductStock, UpdateStockDTO} from "@/service";
 import { withAPIHandler } from "./utils/withAPIHandler";
 import { FetchBuilder } from "./utils/FetchBuilder";
 import defaultMapper from "./responseMappers/defaultMapper";
@@ -10,14 +9,20 @@ export const getProducts =
     defaultMapper
   );
 
+export const getProduct = (productId: string) =>
+    withAPIHandler<Product>(
+        new FetchBuilder(`/api/products/${productId}`),
+        defaultMapper
+    );
+
 export const getDepots =
   withAPIHandler<Depot[]>(
     new FetchBuilder(`/api/depots`),
     defaultMapper
   );
 
-export const createProduct = (product: Product) =>
-  withAPIHandler<Product>(
+export const createProduct = (product: NewProductDTO) =>
+  withAPIHandler<NewProductDTO>(
     new FetchBuilder(`/api/products`)
       .setMethod("POST")
       .setHeaders({ "Content-Type": "application/json" })
@@ -32,11 +37,25 @@ export const deleteProduct = (productId: string) =>
     defaultMapper
   );
 
-export const updateProductStock = (productId: string, depotId: string, stock: number) =>
-  withAPIHandler<Product>(
-    new FetchBuilder(`/api/products/${productId}/stock`)
+export const updateProductStock = (stock: UpdateStockDTO) =>
+  withAPIHandler<UpdateStockDTO>(
+    new FetchBuilder(`/api/products/${stock.fk_product_id}/stock/${stock.fk_depot_id}`)
       .setMethod("PUT")
       .setHeaders({ "Content-Type": "application/json" })
-      .setBody({ "depot": depotId, "stock": stock }),
+      .setBody({
+          quantity: stock.quantity
+      }),
     defaultMapper
   );
+
+export const getStock = (productId: string, depotId: string) =>
+    withAPIHandler<GetProductStockType>(
+        new FetchBuilder(`/api/products/${productId}/stock/${depotId}`),
+        defaultMapper
+    );
+
+export const getStocks = (productId: string) =>
+    withAPIHandler<GetProductStockType[]>(
+        new FetchBuilder(`/api/products/${productId}/stock`),
+        defaultMapper
+    );

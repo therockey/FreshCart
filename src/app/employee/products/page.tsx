@@ -8,7 +8,7 @@ import {
     DialogContent,
 } from "@/components/ui/dialog";
 import {Plus, Trash, CogFour, Search, ChartBarTwo} from "@mynaui/icons-react";
-import {useQuery} from "@tanstack/react-query";
+import {useMutation, useQuery} from "@tanstack/react-query";
 import {MachineType, useCustomMachine} from "@/hooks/useCustomMachine";
 import React from "react";
 import {AddProductStates} from "@/xstate/addProductMachine";
@@ -17,26 +17,65 @@ import {ProductNameInput} from "@/components/products/add/ProductNameInput";
 import {ProductDataInput} from "@/components/products/add/ProductDataInput";
 import {Confirmation} from "@/components/products/add/Confirmation";
 import {DepotPicker} from "@/components/products/updateStock/DepotPicker";
-import {getProducts} from "@/api/EmployeeFetch";
+import {createProduct, getProducts, updateProductStock} from "@/api/EmployeeFetch";
 import {SuccessPage} from "@/components/products/add/SuccessPage";
 import {useForm} from "react-hook-form";
 import {ChangeStock} from "@/components/products/updateStock/ChangeStock";
 import {StockUpdateSuccess} from "@/components/products/updateStock/StockUpdateSuccess";
+import {NewProductDTO, UpdateStockDTO} from "@/service";
+import {ProductInfo} from "@/components/products/ProductInfo";
 
 const ProductsPage = () => {
-    const {isPending, error, data} = useQuery({
+    const {isPending, error, data, refetch} = useQuery({
         queryKey: ["products"],
         queryFn: getProducts,
     });
 
     const {state: addState, ...eventSenders} = useCustomMachine(MachineType.ADD_PRODUCT);
-    const nameFormProps = useForm();
-    const dataFormProps = useForm();
+    const createFormProps = useForm();
 
     const {state: updateStockState, ...updateStockEventSenders} = useCustomMachine(MachineType.UPDATE_STOCK);
     const updateStockFormProps = useForm();
 
-    const {watch: watchNameFormProps} = nameFormProps;
+    const {watch: watchCreateFormProps} = createFormProps;
+    const {watch: watchUpdateStockFormProps} = updateStockFormProps;
+
+    const addMutationFn = async (body: NewProductDTO) => {
+        const data = await createProduct(body)();
+        return data;
+    };
+
+    const updateStockMutationFn = async (body: UpdateStockDTO) => {
+        const data = await updateProductStock(body)();
+        return data;
+    }
+
+    const {mutate: addMutate} = useMutation({
+        mutationFn: addMutationFn,
+        onSuccess: () => {
+            refetch();
+        },
+    });
+
+    const {mutate: updateStockMutate} = useMutation({
+        mutationFn: updateStockMutationFn,
+    });
+
+    const addProduct = () => {
+        addMutate({
+            ...watchCreateFormProps(),
+            price: parseFloat(watchCreateFormProps().price),
+            weight: parseInt(watchCreateFormProps().weight)
+        } as NewProductDTO);
+    }
+
+    const updateStock = (productId: number) => {
+        updateStockMutate({
+            quantity: parseInt(watchUpdateStockFormProps().quantity),
+            fk_depot_id: parseInt(watchUpdateStockFormProps().depot),
+            fk_product_id: productId,
+        } as UpdateStockDTO);
+    }
 
     return (
         <div className="p-5">
@@ -50,8 +89,7 @@ const ProductsPage = () => {
                 <Dialog>
                     <DialogTrigger asChild>
                         <Button className="hover:bg-accent" onClick={() => {
-                            nameFormProps.reset();
-                            dataFormProps.reset();
+                            createFormProps.reset();
                             eventSenders.resetState();
                         }}>
                             <Plus/>
@@ -60,14 +98,14 @@ const ProductsPage = () => {
                     </DialogTrigger>
                     <DialogContent onInteractOutside={(e) => e.preventDefault()}>
                         {addState === AddProductStates.NAME && (
-                            <ProductNameInput {...eventSenders} {...nameFormProps}/>
+                            <ProductNameInput {...eventSenders} {...createFormProps}/>
                         )}
                         {addState === AddProductStates.DATA && (
-                            <ProductDataInput {...eventSenders} {...dataFormProps}/>
+                            <ProductDataInput {...eventSenders} {...createFormProps}/>
                         )}
                         {addState === AddProductStates.CONFIRM && (
-                            <Confirmation {...eventSenders} productName={watchNameFormProps().name} onConfirm={() => {
-                            }}/>
+                            <Confirmation {...eventSenders} productName={watchCreateFormProps().name}
+                                          onConfirm={addProduct}/>
                         )}
                         {addState === AddProductStates.SUCCESS && <SuccessPage/>}
                     </DialogContent>
@@ -104,12 +142,16 @@ const ProductsPage = () => {
                                         )}
                                         {updateStockState === UpdateStockStates.STOCK && (
                                             <ChangeStock  {...updateStockEventSenders} {...updateStockFormProps}
-                                                          onConfirm={() => {
-                                                          }}/>
+                                                          onConfirm={() => updateStock(product.id)}
+                                                          productId={product.id.toString()}
+                                                          depotId={updateStockFormProps.watch().depot}
+
+                                            />
                                         )}
                                         {updateStockState === UpdateStockStates.SUCCESS && <StockUpdateSuccess/>}
                                     </DialogContent>
                                 </Dialog>
+                                <ProductInfo productId={product.id}/>
                                 <Button size="icon" className="bg-primary h-full hover:bg-accent">
                                     <CogFour/>
                                 </Button>

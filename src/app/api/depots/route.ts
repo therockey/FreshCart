@@ -1,18 +1,7 @@
 import { NextRequest } from "next/server";
+import {getDepots} from "@/service";
 
 export async function GET(request: NextRequest) {
-    const depots = [
-        {
-            id: "1",
-            location: "depot1",
-            name: "Wrocław 1",
-        },
-        {
-            id: "2",
-            location: "depot2",
-            name: "Wrocław 2",
-        },
-    ];
-
+    const depots = await getDepots();
     return Response.json(depots);
 }

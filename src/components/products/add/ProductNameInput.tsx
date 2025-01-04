@@ -1,7 +1,7 @@
 import React from "react";
 import {Button} from "@/components/ui/button";
-import {DialogHeader, DialogTitle} from "@/components/ui/dialog";
-import {ArrowRight} from "@mynaui/icons-react";
+import {DialogClose, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import {ArrowRight, Edit} from "@mynaui/icons-react";
 import {CustomFormField} from "@/components/commons/CustomFormField";
 
 interface ProductNameInputProps {
@@ -19,8 +19,6 @@ interface ProductNameInputProps {
 
 export const ProductNameInput: React.FC<ProductNameInputProps> = ({
                                                                       sendNext,
-                                                                      sendBack,
-                                                                      reset,
                                                                       handleSubmit,
                                                                       register,
                                                                       formState: {errors},
@@ -48,10 +46,17 @@ export const ProductNameInput: React.FC<ProductNameInputProps> = ({
                     required: "Nazwa nie może być pusta"
                 })}
             />
-            <Button type="submit">
-                Przejdź dalej
-                <ArrowRight/>
-            </Button>
+            <div className="flex flex-row justify-between">
+                <DialogClose asChild>
+                    <Button className="bg-secondary hover:bg-accent w-48">
+                        Anuluj
+                    </Button>
+                </DialogClose>
+                <Button type="submit" className="hover:bg-accent w-48">
+                    Przejdź dalej
+                    <ArrowRight/>
+                </Button>
+            </div>
         </form>
     );
 }
