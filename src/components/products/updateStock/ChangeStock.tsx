@@ -66,11 +66,11 @@ export const ChangeStock: React.FC<ChangeStockProps> = ({
                 </div>
                 <div className="flex flex-col space-y-0.5">
                     <div className="font-bold">Aktualny stan magazynowy</div>
-                    <div className="text-2xl font-thin">{data?.quantity}</div>
+                    {data && <div className="text-2xl font-thin">{data?.quantity}</div>}
                 </div>
                 <div className="flex flex-row space-x-2.5  px-10">
                     {data && <CustomFormField
-                        className="w-full"
+                        {...{className: "w-full"}}
                         label="Podaj nowy stan magazynowy"
                         errorMessage={errors.quantity?.message && "Stan magazynowy nie może być <= 0"}
                         inputProps={{

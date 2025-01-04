@@ -47,27 +47,27 @@ INSERT INTO
 VALUES
     (
         10.99,
-        1.5,
-        'Delicious cheese',
+        200,
+        'Limitowana wersja Old Rotterdam, dojrzewająca przez 100 tygodni. Dzięki wzmocnionemu aromatowi oraz wyjątkowo kruchej konsystencji podbija serca wielbicieli sera i wina, a także jest niezastąpionym elementem prawdziwej deski serów.',
         'sery',
         CURRENT_DATE,
-        'Cheddar Cheese'
+        'Ser Old Rotterdam 100 tygodni - prezentowy'
     ),
     (
-        5.49,
-        0.5,
-        'Fresh yogurt',
-        'jogurty',
+        3.29,
+        950,
+        'Mleko UHT, pozyskiwane na najczystszych ekologicznie terenach Polski, o najwyższej wartości odżywczej i biologicznej, jest nie tylko głównym źródłem wapnia w diecie, ale również dostarcza pełnowartościowego i łatwostrawnego białka.',
+        'mleko',
         CURRENT_DATE,
-        'Strawberry Yogurt'
+        'Mleko UHT 0,5% tł. 1L'
     ),
     (
-        15.99,
-        2.0,
-        'Creamy butter',
-        'masla',
+        12.99,
+        1000,
+        'Wypasiony twaróg sernikowy klasyczny to produkt w pełni naturalny, bez konserwantów, barwników i aromatów. Nie wymaga  mielenia.',
+        'twarogi',
         CURRENT_DATE,
-        'Premium Butter'
+        'Twaróg Sernikowy Klasyczny 1kg'
     );
 
 -- Add Products to the Cart
