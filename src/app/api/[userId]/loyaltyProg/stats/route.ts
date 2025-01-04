@@ -1,16 +1,12 @@
+import { getUserLpStats } from "@/service";
 import { NextRequest } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
-  const paramsValue = await params;
-  console.log(paramsValue);
-  const loyaltyProgStats = {
-    totalPoints: 100,
-    currentPoints: 2031,
-    savedMoney: 100,
-  };
+  const { userId } = await params;
+  const data = await getUserLpStats(parseInt(userId));
 
-  return Response.json(loyaltyProgStats);
+  return Response.json(data);
 }

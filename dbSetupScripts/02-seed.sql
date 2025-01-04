@@ -16,7 +16,7 @@ VALUES
     (
         1,
         'user123@example.com',
-        ROW('Main St', '123', '12345', 'Sample City') :: ADDRESS,
+        'esadas',
         NULL
     );
 
@@ -88,10 +88,13 @@ INSERT INTO
     )
 VALUES
     (
-        false,      -- Not greedy
-        100,        -- Points threshold for benefits
-        true,       -- Free delivery eligible
-        true        -- Loyalty program is active
+        false,
+        -- Not greedy
+        100,
+        -- Points threshold for benefits
+        true,
+        -- Free delivery eligible
+        true -- Loyalty program is active
     );
 
 -- Step 6: Create Loyalty Program Stats
@@ -104,10 +107,13 @@ INSERT INTO
     )
 VALUES
     (
-        50,        -- Current points
-        150,       -- Total points earned
-        25.50,     -- Money saved so far
-        500.00     -- Total money spent
+        50,
+        -- Current points
+        150,
+        -- Total points earned
+        25.50,
+        -- Money saved so far
+        500.00 -- Total money spent
     );
 
 -- Link Loyalty Program Settings and Stats to Client
@@ -118,3 +124,103 @@ SET
     "fk_loyalty_stats_id" = 1
 WHERE
     "fk_system_user_id" = 1;
+
+INSERT INTO
+    "Order" (
+        "created_at",
+        "address",
+        "loyaltyPointsGained",
+        "freeDelivery",
+        "status",
+        "price",
+        "fk_client_id",
+        "contact_phone_num",
+        "payment_method"
+    )
+VALUES
+    (
+        '2025-01-02',
+        'esadas',
+        10,
+        TRUE,
+        'completed',
+        21.98,
+        1,
+        '987-654-3210',
+        'Visa'
+    );
+
+INSERT INTO
+    "Order" (
+        "created_at",
+        "address",
+        "loyaltyPointsGained",
+        "freeDelivery",
+        "status",
+        "price",
+        "fk_client_id",
+        "contact_phone_num",
+        "payment_method"
+    )
+VALUES
+    (
+        '2025-01-02',
+        'esadas',
+        10,
+        TRUE,
+        'completed',
+        21.98,
+        1,
+        '987-654-3210',
+        'Visa'
+    );
+
+INSERT INTO
+    "Order" (
+        "created_at",
+        "address",
+        "loyaltyPointsGained",
+        "freeDelivery",
+        "status",
+        "price",
+        "fk_client_id",
+        "contact_phone_num",
+        "payment_method"
+    )
+VALUES
+    (
+        '2025-01-02',
+        'esadas',
+        10,
+        TRUE,
+        'completed',
+        21.98,
+        1,
+        '987-654-3210',
+        'Visa'
+    );
+
+INSERT INTO
+    "Order" (
+        "created_at",
+        "address",
+        "loyaltyPointsGained",
+        "freeDelivery",
+        "status",
+        "price",
+        "fk_client_id",
+        "contact_phone_num",
+        "payment_method"
+    )
+VALUES
+    (
+        '2025-01-02',
+        'esadas',
+        10,
+        TRUE,
+        'completed',
+        21.98,
+        1,
+        '987-654-3210',
+        'Visa'
+    );

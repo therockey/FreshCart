@@ -1,28 +1,12 @@
+import { getUserOrderHistory } from "@/service/Order";
 import { NextRequest } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
-  const orderHistory = {
-    orderHistory: [
-      {
-        id: "1",
-        price: 100,
-        date: new Date(),
-      },
-      {
-        id: "2",
-        price: 200,
-        date: new Date(),
-      },
-      {
-        id: "3",
-        price: 200,
-        date: new Date(),
-      },
-    ],
-  };
-
-  return Response.json(orderHistory);
+  const { userId } = await params;
+  const data = await getUserOrderHistory(parseInt(userId));
+  console.log(data);
+  return Response.json(data);
 }

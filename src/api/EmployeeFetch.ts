@@ -15,11 +15,10 @@ export const getProduct = (productId: string) =>
         defaultMapper
     );
 
-export const getDepots =
-  withAPIHandler<Depot[]>(
-    new FetchBuilder(`/api/depots`),
-    defaultMapper
-  );
+export const getDepots = withAPIHandler<Depot[]>(
+  new FetchBuilder(`/api/depots`),
+  defaultMapper
+);
 
 export const createProduct = (product: NewProductDTO) =>
   withAPIHandler<NewProductDTO>(
@@ -32,8 +31,7 @@ export const createProduct = (product: NewProductDTO) =>
 
 export const deleteProduct = (productId: string) =>
   withAPIHandler<Product>(
-    new FetchBuilder(`/api/products/${productId}`)
-      .setMethod("DELETE"),
+    new FetchBuilder(`/api/products/${productId}`).setMethod("DELETE"),
     defaultMapper
   );
 

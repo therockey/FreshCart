@@ -26,7 +26,7 @@ model CartProducts {
 model Client {
   fk_system_user_id      Int                     @id @default(autoincrement())
   email                  String                  @db.VarChar(255)
-  address                Unsupported("address")?
+  address                String?                 @db.VarChar(255)
   fk_loyalty_settings_id Int?
   fk_loyalty_stats_id    Int?
   fk_cart_id             Int?
@@ -43,7 +43,7 @@ model Complaint {
   created_at   DateTime? @db.Date
   fk_order_id  Int
   fk_return_id Int
-  Order        Order     @relation(fields: [fk_order_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  OrderEntity  Order     @relation(fields: [fk_order_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Return       Return    @relation(fields: [fk_return_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
@@ -53,7 +53,7 @@ model Delivery {
   delivery_date           DateTime?       @db.Date
   fk_delivered_order_id   Int
   fk_delivery_employee_id Int?
-  Order                   Order           @relation(fields: [fk_delivered_order_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  OrderEntity             Order           @relation(fields: [fk_delivered_order_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Employee                Employee?       @relation(fields: [fk_delivery_employee_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
@@ -101,30 +101,11 @@ model LoyaltyProgramStats {
   Client      Client[]
 }
 
-model Order {
-  id                  Int                    @id @default(autoincrement())
-  created_at          DateTime               @db.Date
-  address             Unsupported("address")
-  loyaltyPointsGained Int?
-  freeDelivery        Boolean
-  status              ORDER_STATUS
-  price               Float                  @db.Real
-  fk_client_id        Int
-  fk_employee_id      Int?
-  contact_phone_num   String?                @db.VarChar(255)
-  payment_method      PAYMENT_METHOD?
-  Complaint           Complaint[]
-  Delivery            Delivery[]
-  Client              Client                 @relation(fields: [fk_client_id], references: [fk_system_user_id], onDelete: NoAction, onUpdate: NoAction)
-  Employee            Employee?              @relation(fields: [fk_employee_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  OrderProducts       OrderProducts[]
-}
-
 model OrderProducts {
   id                     Int     @id @default(autoincrement())
   fk_product_id          Int
   fk_containing_order_id Int
-  Order                  Order   @relation(fields: [fk_containing_order_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  OrderEntity            Order   @relation(fields: [fk_containing_order_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   Product                Product @relation(fields: [fk_product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
@@ -164,12 +145,12 @@ model ProductStock {
 }
 
 model Return {
-  id                    Int                    @id @default(autoincrement())
-  pickup_address        Unsupported("address")
-  pickup_date           DateTime               @db.Date
+  id                    Int         @id @default(autoincrement())
+  pickup_address        String      @db.VarChar(255)
+  pickup_date           DateTime    @db.Date
   fk_pickup_employee_id Int
   Complaint             Complaint[]
-  Employee              Employee               @relation(fields: [fk_pickup_employee_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  Employee              Employee    @relation(fields: [fk_pickup_employee_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model SystemUser {
@@ -179,6 +160,25 @@ model SystemUser {
   phone_num String?   @db.VarChar(255)
   Client    Client?
   Employee  Employee?
+}
+
+model Order {
+  id                  Int             @id @default(autoincrement())
+  created_at          DateTime        @db.Date
+  address             String          @db.VarChar(255)
+  loyaltyPointsGained Int?
+  freeDelivery        Boolean
+  status              ORDER_STATUS
+  price               Float           @db.Real
+  fk_client_id        Int
+  fk_employee_id      Int?
+  contact_phone_num   String?         @db.VarChar(255)
+  payment_method      PAYMENT_METHOD?
+  Complaint           Complaint[]
+  Delivery            Delivery[]
+  Client              Client          @relation(fields: [fk_client_id], references: [fk_system_user_id], onDelete: NoAction, onUpdate: NoAction)
+  Employee            Employee?       @relation(fields: [fk_employee_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  OrderProducts       OrderProducts[]
 }
 
 enum DELIVERY_STATUS {
