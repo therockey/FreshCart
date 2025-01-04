@@ -1,25 +1,21 @@
-import { Cart } from "@/types/Cart";
 import { withAPIHandler } from "./utils/withAPIHandler";
 import { FetchBuilder } from "./utils/FetchBuilder";
 import defaultMapper from "./responseMappers/defaultMapper";
-import { LoyaltyProgSettings } from "@/types/LoyaltyProgSettings";
-import { OrderHistoryItem } from "@/types/OrderHistoryItem";
-import { UserCartType, UserLpSettingsType } from "@/service";
+import {
+  CartWithPrice,
+  UserLpSettingsType,
+  UserOrderHistory,
+  UserStatsLpType,
+} from "@/service";
 
 export const getCart = (customerId: string) =>
-  withAPIHandler<UserCartType>(
+  withAPIHandler<CartWithPrice>(
     new FetchBuilder(`/api/${customerId}/cart`),
     defaultMapper
   );
 
-export const getCartPrice = (customerId: string) =>
-  withAPIHandler<CartPrice>(
-    new FetchBuilder(`/api/${customerId}/cart/price`),
-    defaultMapper
-  );
-
 export const getLoyaltyProgStats = (customerId: string) =>
-  withAPIHandler<LoyaltyProgStats>(
+  withAPIHandler<UserStatsLpType>(
     new FetchBuilder(`/api/${customerId}/loyaltyProg/stats`),
     defaultMapper
   );
@@ -43,7 +39,16 @@ export const updateLoyaltyProg = (
   );
 
 export const getOrderHistory = (customerId: string) =>
-  withAPIHandler<OrderHistoryItem[]>(
+  withAPIHandler<UserOrderHistory>(
     new FetchBuilder(`/api/${customerId}/order/history`),
-    (response) => response.orderHistory
+    defaultMapper
+  );
+
+export const placeOrder = (customerId: string, address: string) =>
+  withAPIHandler<UserOrderHistory>(
+    new FetchBuilder(`/api/${customerId}/order`)
+      .setMethod("POST")
+      .setHeaders({ "Content-Type": "application/json" })
+      .setBody({ address }),
+    defaultMapper
   );

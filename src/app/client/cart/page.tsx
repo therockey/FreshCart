@@ -1,5 +1,5 @@
 "use client";
-import { getCart, getCartPrice } from "@/api/CustomerFetch";
+import { getCart } from "@/api/CustomerFetch";
 import CartListItem from "@/components/cart/CartListItem";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -12,20 +12,16 @@ const Page = () => {
     queryFn: getCart("1"),
   });
 
-  const { data: priceData } = useQuery({
-    queryKey: ["cartPrice"],
-    queryFn: getCartPrice("1"),
-  });
-
+  console.log(cart);
   return (
     <div className="flex justify-center flex-col  text-center p-5 max-w-[1200px] mx-auto">
       <h2 className="text-4xl font-bold mb-4">Twój koszyk</h2>
       <h3 className="mb-10">Kontynuuj zakupy bądź złóż zamówienie</h3>
       <Separator />
       {cart &&
-        cart.map(({ Product, quantity }) => (
-          <div key={Product.id}>
-            <CartListItem {...Product} quantity={quantity} />
+        cart.cart?.map(({ product, quantity }) => (
+          <div key={product.id}>
+            <CartListItem {...product} quantity={quantity} />
             <Separator />
           </div>
         ))}
@@ -34,16 +30,17 @@ const Page = () => {
         <h3 className="text-2xl">
           Suma:{" "}
           <span className="font-bold">
-            {cart && priceData?.priceAfterDiscount} zł
+            {cart && cart.totalPrice.toFixed(2)} zł
           </span>
         </h3>
         <h3 className="text-xl ">
           Oszczędzasz:{" "}
-          <span className="font-bold">{cart && priceData?.discount} zł</span>
+          <span className="font-bold">{cart && cart.discount} zł</span>
         </h3>
-        {priceData?.freeDelivery && (
-          <span className="italic">Darmowa dostawa</span>
-        )}
+        <h3 className="text-xl ">
+          Zyskujesz punktów:{" "}
+          <span className="font-bold">{cart && cart.gainedPoints} zł</span>
+        </h3>
       </div>
       <Button
         variant="default"

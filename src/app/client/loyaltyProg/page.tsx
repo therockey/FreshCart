@@ -7,11 +7,6 @@ import { Separator } from "@/components/ui/separator";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
-const labels = {
-  totalPoints: "Suma zdobytych punktów",
-  currentPoints: "Punkty obecne",
-  savedMoney: "Oszczędzone pieniądze",
-};
 const Page = () => {
   const { data: orders } = useQuery({
     queryKey: ["orderHistory"],
@@ -22,22 +17,26 @@ const Page = () => {
     queryKey: ["loyaltyProgStats"],
     queryFn: getLoyaltyProgStats("1"),
   });
-  const badgeProps: { label: string; value: string }[] = Object.entries(
-    labels
-  ).map(([key, value]) => ({
-    label: value,
-    value: `${
-      loyaltyProgStats ? loyaltyProgStats[key as keyof LoyaltyProgStats] : "..."
-    } ${key === "savedMoney" ? "zł" : ""}`,
-  }));
+
   return (
     <div className="flex justify-center flex-col  text-center p-5 max-w-[1200px] mx-auto gap-4">
       <h2 className="text-4xl font-bold mb-4">Program lojalnościowy</h2>
-      <div className="flex flex-row  justify-between mx-[4rem] my-5">
-        {badgeProps.map((badge) => (
-          <LoyaltyProgStatBadge key={badge.label} {...badge} />
-        ))}
-      </div>
+      {loyaltyProgStats && (
+        <div className="flex flex-row  justify-between mx-[4rem] my-5">
+          <LoyaltyProgStatBadge
+            label="Suma zdobytych punktów"
+            value={`${loyaltyProgStats.total_pts}`}
+          />
+          <LoyaltyProgStatBadge
+            label="Punkty obecne"
+            value={`${loyaltyProgStats.current_pts}`}
+          />
+          <LoyaltyProgStatBadge
+            label="Oszczędzone pieniądze"
+            value={`${loyaltyProgStats.money_saved} zł`}
+          />
+        </div>
+      )}
       <Button asChild variant="default" className="mx-auto">
         <Link href={"loyaltyProg/edit"}>Edytuj program lojalnościowy</Link>
       </Button>

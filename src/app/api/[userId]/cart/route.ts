@@ -1,11 +1,11 @@
 import { NextRequest } from "next/server";
-import { getUserCart } from "@/service";
+import { calculcateCartPrice, getUserCart } from "@/service";
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ userId: string }> }
 ) {
   const { userId } = await params;
-  const data = await getUserCart(parseInt(userId));
-  console.log(data);
-  return Response.json(data);
+  const cartPrice = await calculcateCartPrice(parseInt(userId));
+
+  return Response.json(cartPrice);
 }

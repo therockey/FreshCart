@@ -25,11 +25,11 @@ export const getUserLpStats = async (userId: number) => {
     },
     include: { LoyaltyProgramStats: true },
   });
-
   return clientCart?.LoyaltyProgramStats;
 };
 
 export type UserStatsLpType = Prisma.PromiseReturnType<typeof getUserLpStats>;
+export type UserLpStatsKeys = keyof NonNullable<UserStatsLpType>;
 
 export const updateUserLpSettings = async (
   userId: number,
@@ -41,7 +41,7 @@ export const updateUserLpSettings = async (
     },
     data: {
       LoyaltyProgramSettings: {
-        update: { ...data, fk_client_id: userId },
+        update: { ...data },
       },
     },
   });

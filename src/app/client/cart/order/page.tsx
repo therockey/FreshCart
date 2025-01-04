@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { OrderStates } from "@/xstate/orderMachine";
 import { useForm } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +11,8 @@ import {
 import { SuccessPage } from "@/components/cart/checkout/SuccessPage";
 import { Overview } from "@/components/cart/checkout/Overview";
 import { MachineType, useCustomMachine } from "@/hooks/useCustomMachine";
+import { useMutation } from "@tanstack/react-query";
+import { placeOrder } from "@/api/CustomerFetch";
 
 const OrderProcess = () => {
   const { state, ...eventSenders } = useCustomMachine(MachineType.ORDER);
@@ -21,9 +23,18 @@ const OrderProcess = () => {
   const paymentFormProps = useForm();
   const { watch: watchFormProps } = formProps;
   const { watch: watchPaymentFormProps } = paymentFormProps;
-
-  console.log("Form values:", watchFormProps());
-  console.log("Payment Form values:", watchPaymentFormProps());
+  const mutationFn = async (address: string) => {
+    const data = await placeOrder("1", address)();
+    return data;
+  };
+  const { mutate } = useMutation({
+    mutationFn,
+  });
+  useEffect(() => {
+    if (state === OrderStates.SUCCESS) {
+      mutate(JSON.stringify(watchFormProps()));
+    }
+  }, [state]);
   return (
     <div className="p-4">
       {state === OrderStates.ADDRESS && (
@@ -39,9 +50,7 @@ const OrderProcess = () => {
           setPaymentMethod={setPaymentMethod}
         />
       )}
-
       {state === OrderStates.SUCCESS && <SuccessPage />}
-      {state === OrderStates.EXIT && <p>Process Exited</p>}
     </div>
   );
 };
