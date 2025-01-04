@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { ORDER_STATUS, PAYMENT_METHOD, Prisma } from "@prisma/client";
-import { calculcateCartPrice } from "./Cart";
+import { getCartWithPrice } from "./Cart";
 import { Order } from "@prisma/client";
 export { type Order as OrderType };
 export const getUserOrderHistory = async (userId: number) => {
@@ -20,7 +20,7 @@ export type UserOrderHistory = Prisma.PromiseReturnType<
 export const placeOrder = async (userId: number, address: string) => {
   try {
     // Step 1: Fetch cart details
-    const cartData = await calculcateCartPrice(userId);
+    const cartData = await getCartWithPrice(userId);
 
     if (!cartData) {
       throw new Error(

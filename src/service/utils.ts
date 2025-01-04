@@ -18,3 +18,9 @@ export const calculateDiscount = (
 
   return { price: Math.min(discount, initialPrice), discount };
 };
+
+
+export const handleDatabaseError = (error: unknown) => {
+  console.error("Database error:", error);
+  throw new Error("An error occurred while accessing the database.");
+};

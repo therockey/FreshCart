@@ -1,11 +1,34 @@
-import { NextRequest } from "next/server";
-import { calculcateCartPrice, getUserCart } from "@/service";
+import { NextRequest, NextResponse } from "next/server";
+import { getCartWithPrice } from "@/service";
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ userId: string }> }
+  context: { params: { userId: string } }
 ) {
-  const { userId } = await params;
-  const cartPrice = await calculcateCartPrice(parseInt(userId));
+  try {
+    const { userId } = await context.params;
+    const parsedUserId = parseInt(userId);
 
-  return Response.json(cartPrice);
+    if (isNaN(parsedUserId)) {
+      return NextResponse.json(
+        { error: "Invalid user ID. Must be a valid number." },
+        { status: 400 }
+      );
+    }
+
+    const cartPrice = await getCartWithPrice(parsedUserId);
+
+    if (!cartPrice || !cartPrice.cart?.length) {
+      return NextResponse.json({ message: "Data not found." }, { status: 404 });
+    }
+
+    return NextResponse.json(cartPrice, { status: 200 });
+  } catch (error) {
+    console.error("Error fetching cart price:", error);
+
+    return NextResponse.json(
+      { error: (error as Error).message || "An unexpected error occurred." },
+      { status: 500 }
+    );
+  }
 }
