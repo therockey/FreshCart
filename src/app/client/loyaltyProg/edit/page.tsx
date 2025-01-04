@@ -1,31 +1,32 @@
 "use client";
-import { LoyaltyProgSettings } from "../../../../types/LoyaltyProgSettings";
 import { getLoyaltyProg, updateLoyaltyProg } from "@/api/CustomerFetch";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { RowForBooleanOption } from "@/components/loyaltyProg/RowForBooleanOption";
 import { RowForNumberOptions } from "@/components/loyaltyProg/RowForNumberOption";
+import { UserLpSettingsKeys, UserLpSettingsType } from "@/service";
 
 const Page = () => {
-  const queryClient = useQueryClient();
-  const { data: loyaltyProgSettings } = useQuery({
+  const { data: loyaltyProgSettings, refetch } = useQuery({
     queryKey: ["loyaltyProgSettings"],
-    queryFn: getLoyaltyProg("1231"),
+    queryFn: getLoyaltyProg("1"),
+  });
+  const mutationFn = async (body: UserLpSettingsType) => {
+    const data = await updateLoyaltyProg("1", body)();
+    return data;
+  };
+  const { mutate } = useMutation({
+    mutationFn: mutationFn,
+    onSuccess: () => {
+      refetch();
+    },
   });
 
-  const handleChange = async (
-    key: keyof LoyaltyProgSettings,
-    value: boolean
-  ) => {
-    await updateLoyaltyProg("1231", { ...loyaltyProgSettings!, [key]: value });
-    queryClient.invalidateQueries({ queryKey: ["loyaltyProgSettings"] });
+  const handleChange = async (key: UserLpSettingsKeys, value: boolean) => {
+    mutate({ ...loyaltyProgSettings!, [key]: value });
   };
 
-  const handleNumberChange = async (
-    key: keyof LoyaltyProgSettings,
-    value: number
-  ) => {
-    await updateLoyaltyProg("1231", { ...loyaltyProgSettings!, [key]: value });
-    queryClient.invalidateQueries({ queryKey: ["loyaltyProgSettings"] });
+  const handleNumberChange = async (key: UserLpSettingsKeys, value: number) => {
+    mutate({ ...loyaltyProgSettings!, [key]: value });
   };
 
   if (!loyaltyProgSettings) return null;
@@ -38,29 +39,29 @@ const Page = () => {
       <RowForBooleanOption
         label={"greedy"}
         sublabel={"Description for greedy"}
-        value={loyaltyProgSettings.greedy}
-        onChange={(arg) => handleChange("greedy", arg)}
+        value={loyaltyProgSettings.is_greedy ?? false}
+        onChange={(arg) => handleChange("is_greedy", arg)}
       />
 
       <RowForNumberOptions
         label="Punkty do skumulowania"
         sublabel="Ilość punktów, po której klient dostaje nagrodę"
-        value={loyaltyProgSettings.cumulateUntil}
-        onChange={(arg) => handleNumberChange("cumulateUntil", arg)}
+        value={loyaltyProgSettings.point_threshold ?? 0}
+        onChange={(arg) => handleNumberChange("point_threshold", arg)}
       />
 
       <RowForBooleanOption
         label={"useFreeDelivery"}
         sublabel={"Description for useFreeDelivery"}
-        value={loyaltyProgSettings.useFreeDelivery}
-        onChange={(arg) => handleChange("useFreeDelivery", arg)}
+        value={loyaltyProgSettings.free_delivery ?? false}
+        onChange={(arg) => handleChange("free_delivery", arg)}
       />
 
       <RowForBooleanOption
         label={"switchOffProg"}
         sublabel={"Description for switchOffProg"}
-        value={loyaltyProgSettings.switchOffProg}
-        onChange={(arg) => handleChange("switchOffProg", arg)}
+        value={loyaltyProgSettings.is_active ?? false}
+        onChange={(arg) => handleChange("is_active", arg)}
       />
     </div>
   );

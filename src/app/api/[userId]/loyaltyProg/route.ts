@@ -1,24 +1,22 @@
+import { getUserLpSettings, updateUserLpSettings } from "@/service";
 import { NextRequest } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
-  const loyaltyProg = {
-    greedy: true,
-    cumulateUntil: 100,
-    useFreeDelivery: true,
-    switchOffProg: false,
-  };
+  const { userId } = await params;
+  const data = await getUserLpSettings(parseInt(userId));
 
-  return Response.json(loyaltyProg);
+  return Response.json(data);
 }
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ slug: string }> }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   const res = await request.json();
-  console.log(res);
-  return Response.json(res);
+  const { userId } = await params;
+  const data = await updateUserLpSettings(parseInt(userId), res);
+  return Response.json(data);
 }

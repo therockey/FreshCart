@@ -1,11 +1,9 @@
--- lets add seeding sql script in here
 -- Step 1: Create a SystemUser
 INSERT INTO
     "SystemUser" ("login", "password", "phone_num")
 VALUES
     ('user123', 'securepassword123', '123-456-7890');
 
--- Assuming the retrieved ID is 1 for demonstration purposes
 -- Step 2: Create a Client linked to the SystemUser
 INSERT INTO
     "Client" (
@@ -22,13 +20,13 @@ VALUES
         NULL
     );
 
+-- Step 3: Create a Cart
 INSERT INTO
     "Cart" ("created_at")
 VALUES
     (CURRENT_DATE);
 
--- Assuming the Cart ID is 1 for demonstration purposes
--- Update Client's cart_id
+-- Update Client's fk_cart_id
 UPDATE
     "Client"
 SET
@@ -72,15 +70,53 @@ VALUES
         'Premium Butter'
     );
 
--- Assuming Product IDs are 1, 2, and 3 for demonstration purposes
--- Step 5: Add Products to the Cart with Quantities
+-- Add Products to the Cart
 INSERT INTO
     "CartProducts" ("fk_product_id", "fk_cart_id", "quantity")
 VALUES
     (1, 1, 3),
-    -- 3 units of Cheddar Cheese
     (2, 1, 2),
-    -- 2 units of Strawberry Yogurt
     (3, 1, 1);
 
--- 1 unit of Premium Butter
+-- Step 5: Create Loyalty Program Settings
+INSERT INTO
+    "LoyaltyProgramSettings" (
+        "fk_client_id",
+        "is_greedy",
+        "point_threshold",
+        "free_delivery",
+        "is_active"
+    )
+VALUES
+    (
+        1,          -- Linking to Client with fk_system_user_id = 1
+        false,      -- Not greedy
+        100,        -- Points threshold for benefits
+        true,       -- Free delivery eligible
+        true        -- Loyalty program is active
+    );
+
+-- Step 6: Create Loyalty Program Stats
+INSERT INTO
+    "LoyaltyProgramStats" (
+        "current_pts",
+        "total_pts",
+        "money_saved",
+        "total_spent"
+    )
+VALUES
+    (
+        50,        -- Current points
+        150,       -- Total points earned
+        25.50,     -- Money saved so far
+        500.00     -- Total money spent
+    );
+
+-- Link Loyalty Program Settings and Stats to Client
+UPDATE
+    "Client"
+SET
+    "fk_loyalty_settings_id" = (SELECT id FROM "LoyaltyProgramSettings" WHERE "fk_client_id" = 1),
+    "fk_loyalty_stats_id" = (SELECT id FROM "LoyaltyProgramStats" WHERE "current_pts" = 50)
+WHERE
+    "fk_system_user_id" = 1;

@@ -15,12 +15,12 @@ const labels = {
 const Page = () => {
   const { data: orders } = useQuery({
     queryKey: ["orderHistory"],
-    queryFn: getOrderHistory("1231"),
+    queryFn: getOrderHistory("1"),
   });
 
   const { data: loyaltyProgStats } = useQuery({
     queryKey: ["loyaltyProgStats"],
-    queryFn: getLoyaltyProgStats("1231"),
+    queryFn: getLoyaltyProgStats("1"),
   });
   const badgeProps: { label: string; value: string }[] = Object.entries(
     labels

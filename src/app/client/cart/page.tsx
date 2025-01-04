@@ -9,12 +9,12 @@ import Link from "next/link";
 const Page = () => {
   const { data: cart } = useQuery({
     queryKey: ["cart"],
-    queryFn: getCart("1231"),
+    queryFn: getCart("1"),
   });
 
   const { data: priceData } = useQuery({
     queryKey: ["cartPrice"],
-    queryFn: getCartPrice("1231"),
+    queryFn: getCartPrice("1"),
   });
 
   return (
@@ -23,9 +23,9 @@ const Page = () => {
       <h3 className="mb-10">Kontynuuj zakupy bądź złóż zamówienie</h3>
       <Separator />
       {cart &&
-        cart.products.map((product, index) => (
-          <div key={index}>
-            <CartListItem {...product} quantity={cart.quantities[index]} />
+        cart.map(({ Product, quantity }) => (
+          <div key={Product.id}>
+            <CartListItem {...Product} quantity={quantity} />
             <Separator />
           </div>
         ))}
