@@ -65,7 +65,7 @@ VALUES
         15.99,
         2.0,
         'Creamy butter',
-        'masła',
+        'masla',
         CURRENT_DATE,
         'Premium Butter'
     );

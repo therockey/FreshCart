@@ -1,4 +1,4 @@
-import { Product } from "@/types/Product";
+import { Product } from "@/service";
 import { Depot } from "@/types/Depot";
 import { withAPIHandler } from "./utils/withAPIHandler";
 import { FetchBuilder } from "./utils/FetchBuilder";

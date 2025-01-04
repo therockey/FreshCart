@@ -210,7 +210,7 @@ enum PRODUCT_CATEGORY {
   jogurty
   twarogi
   mleko
-  mas_a   @map("masła")
+  masla
   inne
-  mietany @map("śmietany")
+  smietany
 }

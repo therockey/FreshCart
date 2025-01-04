@@ -3,9 +3,9 @@ CREATE TYPE "PRODUCT_CATEGORY" AS ENUM (
     'jogurty',
     'twarogi',
     'mleko',
-    'masła',
+    'masla',
     'inne',
-    'śmietany'
+    'smietany'
     );
 
 CREATE TYPE "ORDER_STATUS" AS ENUM (
