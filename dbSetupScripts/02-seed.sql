@@ -81,7 +81,6 @@ VALUES
 -- Step 5: Create Loyalty Program Settings
 INSERT INTO
     "LoyaltyProgramSettings" (
-        "fk_client_id",
         "is_greedy",
         "point_threshold",
         "free_delivery",
@@ -89,7 +88,6 @@ INSERT INTO
     )
 VALUES
     (
-        1,          -- Linking to Client with fk_system_user_id = 1
         false,      -- Not greedy
         100,        -- Points threshold for benefits
         true,       -- Free delivery eligible
@@ -116,7 +114,7 @@ VALUES
 UPDATE
     "Client"
 SET
-    "fk_loyalty_settings_id" = (SELECT id FROM "LoyaltyProgramSettings" WHERE "fk_client_id" = 1),
-    "fk_loyalty_stats_id" = (SELECT id FROM "LoyaltyProgramStats" WHERE "current_pts" = 50)
+    "fk_loyalty_settings_id" = 1,
+    "fk_loyalty_stats_id" = 1
 WHERE
     "fk_system_user_id" = 1;

@@ -3,8 +3,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 ### Docker rebuild
 
 ```
-docker-compose down
-docker volume rm freshcart-fe_postgres_data
+docker-compose down -v
 docker-compose up
 ```
 

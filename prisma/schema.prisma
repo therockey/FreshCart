@@ -85,7 +85,6 @@ model Employee {
 
 model LoyaltyProgramSettings {
   id              Int      @id @default(autoincrement())
-  fk_client_id    Int
   is_greedy       Boolean?
   point_threshold Int?
   free_delivery   Boolean?
