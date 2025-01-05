@@ -8,8 +8,6 @@ import {
     DialogContent,
 } from "@/components/ui/dialog";
 import {Plus, Trash, CogFour, Search, ChartBarTwo} from "@mynaui/icons-react";
-import {useMutation, useQuery} from "@tanstack/react-query";
-import {MachineType, useCustomMachine} from "@/hooks/useCustomMachine";
 import React from "react";
 import {AddProductStates} from "@/xstate/addProductMachine";
 import {UpdateStockStates} from "@/xstate/updateStockMachine";
@@ -17,65 +15,24 @@ import {ProductNameInput} from "@/components/products/add/ProductNameInput";
 import {ProductDataInput} from "@/components/products/add/ProductDataInput";
 import {Confirmation} from "@/components/products/add/Confirmation";
 import {DepotPicker} from "@/components/products/updateStock/DepotPicker";
-import {createProduct, getProducts, updateProductStock} from "@/api/EmployeeFetch";
 import {SuccessPage} from "@/components/products/add/SuccessPage";
-import {useForm} from "react-hook-form";
 import {ChangeStock} from "@/components/products/updateStock/ChangeStock";
 import {StockUpdateSuccess} from "@/components/products/updateStock/StockUpdateSuccess";
-import {NewProductDTO, UpdateStockDTO} from "@/service";
 import {ProductInfo} from "@/components/products/ProductInfo";
+import {useProductsPage} from "@/hooks/app/employee/products/useProductsPage";
 
 const ProductsPage = () => {
-    const {isPending, error, data, refetch} = useQuery({
-        queryKey: ["products"],
-        queryFn: getProducts,
-    });
-
-    const {state: addState, ...eventSenders} = useCustomMachine(MachineType.ADD_PRODUCT);
-    const createFormProps = useForm();
-
-    const {state: updateStockState, ...updateStockEventSenders} = useCustomMachine(MachineType.UPDATE_STOCK);
-    const updateStockFormProps = useForm();
-
-    const {watch: watchCreateFormProps} = createFormProps;
-    const {watch: watchUpdateStockFormProps} = updateStockFormProps;
-
-    const addMutationFn = async (body: NewProductDTO) => {
-        const data = await createProduct(body)();
-        return data;
-    };
-
-    const updateStockMutationFn = async (body: UpdateStockDTO) => {
-        const data = await updateProductStock(body)();
-        return data;
-    }
-
-    const {mutate: addMutate} = useMutation({
-        mutationFn: addMutationFn,
-        onSuccess: () => {
-            refetch();
-        },
-    });
-
-    const {mutate: updateStockMutate} = useMutation({
-        mutationFn: updateStockMutationFn,
-    });
-
-    const addProduct = () => {
-        addMutate({
-            ...watchCreateFormProps(),
-            price: parseFloat(watchCreateFormProps().price),
-            weight: parseInt(watchCreateFormProps().weight)
-        } as NewProductDTO);
-    }
-
-    const updateStock = (productId: number) => {
-        updateStockMutate({
-            quantity: parseInt(watchUpdateStockFormProps().quantity),
-            fk_depot_id: parseInt(watchUpdateStockFormProps().depot),
-            fk_product_id: productId,
-        } as UpdateStockDTO);
-    }
+    const {
+        products,
+        addProductDialogState,
+        updateStockDialogState,
+        addProductEventSenders,
+        updateStockEventSenders,
+        addProductFormProps,
+        updateStockFormProps,
+        addProduct,
+        updateStock,
+    } = useProductsPage();
 
     return (
         <div className="p-5">
@@ -89,32 +46,32 @@ const ProductsPage = () => {
                 <Dialog>
                     <DialogTrigger asChild>
                         <Button className="hover:bg-accent" onClick={() => {
-                            createFormProps.reset();
-                            eventSenders.resetState();
+                            addProductFormProps.reset();
+                            addProductEventSenders.resetState();
                         }}>
                             <Plus/>
                             Dodaj produkt
                         </Button>
                     </DialogTrigger>
                     <DialogContent onInteractOutside={(e) => e.preventDefault()}>
-                        {addState === AddProductStates.NAME && (
-                            <ProductNameInput {...eventSenders} {...createFormProps}/>
+                        {addProductDialogState === AddProductStates.NAME && (
+                            <ProductNameInput {...addProductEventSenders} {...addProductFormProps}/>
                         )}
-                        {addState === AddProductStates.DATA && (
-                            <ProductDataInput {...eventSenders} {...createFormProps}/>
+                        {addProductDialogState === AddProductStates.DATA && (
+                            <ProductDataInput {...addProductEventSenders} {...addProductFormProps}/>
                         )}
-                        {addState === AddProductStates.CONFIRM && (
-                            <Confirmation {...eventSenders} productName={watchCreateFormProps().name}
+                        {addProductDialogState === AddProductStates.CONFIRM && (
+                            <Confirmation {...addProductEventSenders} productName={addProductFormProps.watch().name}
                                           onConfirm={addProduct}/>
                         )}
-                        {addState === AddProductStates.SUCCESS && <SuccessPage/>}
+                        {addProductDialogState === AddProductStates.SUCCESS && <SuccessPage/>}
                     </DialogContent>
                 </Dialog>
             </div>
 
             <div className="flex flex-col gap-2 py-8">
-                {data &&
-                    data.map((product) => (
+                {products &&
+                    products.map((product) => (
                         <div
                             key={product.id}
                             className="flex flex-row justify-between py-2.5 px-5 rounded bg-card h-16"
@@ -137,10 +94,10 @@ const ProductsPage = () => {
                                         </Button>
                                     </DialogTrigger>
                                     <DialogContent onInteractOutside={(e) => e.preventDefault()}>
-                                        {updateStockState === UpdateStockStates.DEPOT && (
+                                        {updateStockDialogState === UpdateStockStates.DEPOT && (
                                             <DepotPicker {...updateStockEventSenders} {...updateStockFormProps}/>
                                         )}
-                                        {updateStockState === UpdateStockStates.STOCK && (
+                                        {updateStockDialogState === UpdateStockStates.STOCK && (
                                             <ChangeStock  {...updateStockEventSenders} {...updateStockFormProps}
                                                           onConfirm={() => updateStock(product.id)}
                                                           productId={product.id.toString()}
@@ -148,7 +105,7 @@ const ProductsPage = () => {
 
                                             />
                                         )}
-                                        {updateStockState === UpdateStockStates.SUCCESS && <StockUpdateSuccess/>}
+                                        {updateStockDialogState === UpdateStockStates.SUCCESS && <StockUpdateSuccess/>}
                                     </DialogContent>
                                 </Dialog>
                                 <ProductInfo productId={product.id}/>
