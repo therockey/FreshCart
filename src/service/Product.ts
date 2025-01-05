@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { Product as DbProduct } from "@prisma/client";
+import {getDepots} from "@/service/Depot";
+import {createProductStock} from "@/service/Stock";
 
 export const getProducts = async () => {
     return prisma.product.findMany();
@@ -21,15 +23,9 @@ export const addProduct = async (product: NewProductDTO) => {
         }
     });
 
-    const depots = await prisma.depot.findMany();
+    const depots = await getDepots();
     for (const depot of depots) {
-        await prisma.productStock.create({
-            data: {
-                fk_product_id: newProduct.id,
-                fk_depot_id: depot.id,
-                quantity: 0,
-            }
-        });
+        await createProductStock(newProduct.id, depot.id, 0);
     }
 
     return newProduct;

@@ -39,6 +39,16 @@ export const updateProductStock = async (productId: number, depotId: number, qua
     });
 }
 
+export const createProductStock = async (productId: number, depotId: number, quantity: number) => {
+    return prisma.productStock.create({
+        data: {
+            fk_product_id: productId,
+            fk_depot_id: depotId,
+            quantity,
+        },
+    });
+}
+
 type UpdateStockDTO = Omit<DbStock, "id" | "updated_at">;
 
 export {type DbStock as ProductStock};
