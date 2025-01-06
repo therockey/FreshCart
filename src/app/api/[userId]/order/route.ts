@@ -1,13 +1,14 @@
-import { placeOrder } from "@/service";
-import { NextRequest } from "next/server";
+import { placeOrder } from "@/service/Order";
+import { createApiHandler, extractUserId } from "@/utils/ApiHandling";
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ userId: string }> }
-) {
-  const { userId } = await params;
-  const req = await request.json();
-  const res = await placeOrder(parseInt(userId), req.address);
-
-  return Response.json(res);
-}
+export const POST = createApiHandler<
+  { userId: string },
+  { address: string },
+  { userId: number; body: { address: string } }
+>({
+  methodName: "POST: /[userId]/order",
+  extractParams: extractUserId,
+  extractBody: (body) => ({ body }),
+  fetchData: async ({ userId, body }) => await placeOrder(userId, body),
+  notFoundMessage: "Failed to post order.",
+});

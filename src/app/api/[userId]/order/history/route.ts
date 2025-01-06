@@ -1,12 +1,13 @@
 import { getUserOrderHistory } from "@/service/Order";
-import { NextRequest } from "next/server";
+import { createApiHandler, extractUserId } from "@/utils/ApiHandling";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ userId: string }> }
-) {
-  const { userId } = await params;
-  const data = await getUserOrderHistory(parseInt(userId));
-  console.log(data);
-  return Response.json(data);
-}
+export const GET = createApiHandler<
+  { userId: string }, // Params type
+  never, // Body type
+  { userId: number } // Combined args type
+>({
+  methodName: "GET: /[userId]/order/history",
+  extractParams: extractUserId,
+  fetchData: async ({ userId }) => await getUserOrderHistory(userId),
+  notFoundMessage: "Loyalty program stats not found for the given userId.",
+});

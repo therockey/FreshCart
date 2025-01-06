@@ -1,11 +1,14 @@
-import {NextRequest} from "next/server";
-import {getAllProductStocks} from "@/service/Stock";
+import { NextRequest } from "next/server";
+import { getAllProductStocks } from "@/service/Stock/Stock";
+import { createApiHandler } from "@/utils/ApiHandling";
 
-export async function GET(
-    request: NextRequest,
-    { params }: { params: Promise<{ productId: string }> }
-) {
-    const { productId } = await params;
-    const data = await getAllProductStocks(parseInt(productId));
-    return Response.json(data);
-}
+export const GET = createApiHandler<
+  { productId: string },
+  never,
+  { productId: number }
+>({
+  methodName: "GET: /products/[productId]/stock",
+  extractParams: ({ productId }) => ({ productId: parseInt(productId) }),
+  fetchData: async ({ productId }) => await getAllProductStocks(productId),
+  notFoundMessage: "Failed to find product stock",
+});

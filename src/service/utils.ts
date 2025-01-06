@@ -1,6 +1,6 @@
-import { UserCartType } from "./Cart";
+import { Cart } from "./Cart/types";
 
-export const calculateUserCartTotal = (cart: UserCartType) => {
+export const calculateUserCartTotal = (cart: Cart) => {
   if (!cart) return 0;
   return cart.reduce((sum, cartItem) => {
     return sum + cartItem.product.price * cartItem.quantity;
@@ -17,10 +17,4 @@ export const calculateDiscount = (
   const discount = Math.floor(pointsToSpend / 100) * 10;
 
   return { price: Math.min(discount, initialPrice), discount };
-};
-
-
-export const handleDatabaseError = (error: unknown) => {
-  console.error("Database error:", error);
-  throw new Error("An error occurred while accessing the database.");
 };

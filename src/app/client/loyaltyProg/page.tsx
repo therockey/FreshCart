@@ -1,23 +1,18 @@
 "use client";
-import { getLoyaltyProgStats, getOrderHistory } from "@/api/CustomerFetch";
+import { ErrorView } from "@/components/commons/ErrorView";
+import { Loader } from "@/components/commons/Loader";
 import LoyaltyProgStatBadge from "@/components/loyaltyProg/LoyaltyProgStatBadge";
 import OrderHistoryListItem from "@/components/loyaltyProg/OrderHistoryListItem";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useQuery } from "@tanstack/react-query";
+import { useLoyaltyProgPage } from "@/hooks/app/client/loyaltyProg/useLoyaltyProgPage";
 import Link from "next/link";
 
 const Page = () => {
-  const { data: orders } = useQuery({
-    queryKey: ["orderHistory"],
-    queryFn: getOrderHistory("1"),
-  });
-
-  const { data: loyaltyProgStats } = useQuery({
-    queryKey: ["loyaltyProgStats"],
-    queryFn: getLoyaltyProgStats("1"),
-  });
-
+  const { data, error, isFetching } = useLoyaltyProgPage(1);
+  if (isFetching) return <Loader />;
+  if (error || !data) return <ErrorView />;
+  const { loyaltyProgStats, orderHistory: orders } = data;
   return (
     <div className="flex justify-center flex-col  text-center p-5 max-w-[1200px] mx-auto gap-4">
       <h2 className="text-4xl font-bold mb-4">Program lojalnościowy</h2>
