@@ -1,22 +1,32 @@
-import { getUserLoyaltyProgSettings, updateUserLpSettings } from "@/service";
-import { NextRequest } from "next/server";
+import {
+  getUserLoyaltyProgSettings,
+  updateUserLoyaltyProgSettings,
+} from "@/service/LoyaltyProg";
+import { LoyaltyProgramSettingsType } from "@/service/LoyaltyProg/types";
+import { createApiHandler, extractUserId } from "@/utils/ApiHandling";
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Promise<{ userId: string }> }
-) {
-  const { userId } = await params;
-  const data = await getUserLoyaltyProgSettings(parseInt(userId));
+export const GET = createApiHandler<
+  { userId: string },
+  never,
+  { userId: number }
+>({
+  methodName: "GET: /[userId]/loyaltyProg",
+  extractParams: extractUserId,
+  fetchData: async ({ userId }) => await getUserLoyaltyProgSettings(userId),
+  notFoundMessage: "Loyalty program settings not found for the given userId.",
+});
 
-  return Response.json(data);
-}
-
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: Promise<{ userId: string }> }
-) {
-  const res = await request.json();
-  const { userId } = await params;
-  const data = await updateUserLpSettings(parseInt(userId), res);
-  return Response.json(data);
-}
+export const PUT = createApiHandler<
+  { userId: string },
+  LoyaltyProgramSettingsType,
+  { userId: number; body: LoyaltyProgramSettingsType }
+>({
+  methodName: "PUT: /[userId]/loyaltyProg",
+  extractParams: extractUserId,
+  extractBody: (body) => {
+    return { body } as Partial<{ body: LoyaltyProgramSettingsType }>;
+  },
+  fetchData: async ({ userId, body }) =>
+    await updateUserLoyaltyProgSettings(userId, body),
+  notFoundMessage: "Failed to update loyalty program settings.",
+});

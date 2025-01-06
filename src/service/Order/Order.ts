@@ -1,40 +1,27 @@
 import { prisma } from "@/lib/prisma";
-import { ORDER_STATUS, PAYMENT_METHOD, Prisma } from "@prisma/client";
-import { getCartWithPrice } from "./Cart";
-import { Order } from "@prisma/client";
-export { type Order as OrderType };
-export const getUserOrderHistory = async (userId: number) => {
+import { Order, ORDER_STATUS, PAYMENT_METHOD } from "@prisma/client";
+import { getCartWithPrice } from "../Cart";
+export const getUserOrderHistory = async (
+  userId: number
+): Promise<Order[] | null> => {
   const orders = await prisma.client.findUnique({
     where: {
       fk_system_user_id: userId,
     },
     include: { Order: true },
   });
-  return orders?.Order;
+  return orders?.Order ?? null;
 };
 
-export type UserOrderHistory = Prisma.PromiseReturnType<
-  typeof getUserOrderHistory
->;
-
-export const placeOrder = async (userId: number, address: string) => {
+export const placeOrder = async (
+  userId: number,
+  body: { address: string }
+): Promise<Order | null> => {
   try {
-    // Step 1: Fetch cart details
     const cartData = await getCartWithPrice(userId);
-
-    if (!cartData) {
-      throw new Error(
-        "Failed to calculate cart price. Received null or undefined."
-      );
-    }
-
+    if (!cartData) throw new Error("Cart is empty");
     const { totalPrice, cart } = cartData;
-
-    if (!cart)
-      throw new Error(
-        "Failed to calculate cart price. Received null or undefined."
-      );
-
+    const { address } = body;
     const orderData = {
       fk_client_id: userId,
       created_at: new Date(),
@@ -46,12 +33,11 @@ export const placeOrder = async (userId: number, address: string) => {
       payment_method: PAYMENT_METHOD.Visa,
     };
 
-    // Step 5: Create the order in Prisma
     const order = await prisma.order.create({ data: orderData });
 
     return order;
   } catch (error) {
     console.error("Error placing order:", error);
-    throw error; // Rethrow to maintain stack trace
+    return null;
   }
 };
