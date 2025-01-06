@@ -1,6 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import { Prisma, Product } from "@prisma/client";
-import { getUserLpSettings, getUserLpStats } from "./LoyaltyProg";
+import {
+  getUserLoyaltyProgSettings,
+  getUserLoyaltyProgStats,
+} from "./LoyaltyProg/LoyaltyProg";
 import { calculateDiscount, calculateUserCartTotal } from "./utils";
 
 export type UserCartType = Prisma.PromiseReturnType<typeof getUserCart>;
@@ -51,12 +54,14 @@ export const getCartWithPrice = async (userId: number) => {
   }
 
   let totalPrice = calculateUserCartTotal(cart);
-  const loyaltySettings = await getUserLpSettings(userId).catch((error) => {
-    console.error("Error fetching loyalty settings:", error);
-    throw new Error("Unable to fetch loyalty settings.");
-  });
+  const loyaltySettings = await getUserLoyaltyProgSettings(userId).catch(
+    (error) => {
+      console.error("Error fetching loyalty settings:", error);
+      throw new Error("Unable to fetch loyalty settings.");
+    }
+  );
 
-  const loyaltyStats = await getUserLpStats(userId).catch((error) => {
+  const loyaltyStats = await getUserLoyaltyProgStats(userId).catch((error) => {
     console.error("Error fetching loyalty stats:", error);
     throw new Error("Unable to fetch loyalty stats.");
   });

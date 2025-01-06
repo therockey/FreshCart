@@ -1,4 +1,4 @@
-import { getUserLpSettings, updateUserLpSettings } from "@/service";
+import { getUserLoyaltyProgSettings, updateUserLpSettings } from "@/service";
 import { NextRequest } from "next/server";
 
 export async function GET(
@@ -6,7 +6,7 @@ export async function GET(
   { params }: { params: Promise<{ userId: string }> }
 ) {
   const { userId } = await params;
-  const data = await getUserLpSettings(parseInt(userId));
+  const data = await getUserLoyaltyProgSettings(parseInt(userId));
 
   return Response.json(data);
 }

@@ -3,7 +3,7 @@ import { FetchBuilder } from "./utils/FetchBuilder";
 import defaultMapper from "./responseMappers/defaultMapper";
 import {
   CartWithPrice,
-  UserLpSettingsType,
+  LoyaltyProgramSettingsType,
   UserOrderHistory,
   UserStatsLpType,
 } from "@/service";
@@ -21,16 +21,16 @@ export const getLoyaltyProgStats = (customerId: string) =>
   );
 
 export const getLoyaltyProg = (customerId: string) =>
-  withAPIHandler<UserLpSettingsType>(
+  withAPIHandler<LoyaltyProgramSettingsType>(
     new FetchBuilder(`/api/${customerId}/loyaltyProg`),
     defaultMapper
   );
 
 export const updateLoyaltyProg = (
   customerId: string,
-  loyaltyProgSettings: UserLpSettingsType
+  loyaltyProgSettings: LoyaltyProgramSettingsType
 ) =>
-  withAPIHandler<UserLpSettingsType>(
+  withAPIHandler<LoyaltyProgramSettingsType>(
     new FetchBuilder(`/api/${customerId}/loyaltyProg`)
       .setMethod("PUT")
       .setHeaders({ "Content-Type": "application/json" })

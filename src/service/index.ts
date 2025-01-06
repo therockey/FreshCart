@@ -1,5 +1,4 @@
 export * from "./Cart";
-export * from "./LoyaltyProg";
 export * from "./Product";
 export * from "./Order";
 export * from "./Stock";

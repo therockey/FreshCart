@@ -3,14 +3,17 @@ import { getLoyaltyProg, updateLoyaltyProg } from "@/api/CustomerFetch";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { RowForBooleanOption } from "@/components/loyaltyProg/RowForBooleanOption";
 import { RowForNumberOptions } from "@/components/loyaltyProg/RowForNumberOption";
-import { UserLpSettingsKeys, UserLpSettingsType } from "@/service";
+import {
+  LoyaltyProgramSettingsKey,
+  LoyaltyProgramSettingsType,
+} from "@/service";
 
 const Page = () => {
   const { data: loyaltyProgSettings, refetch } = useQuery({
     queryKey: ["loyaltyProgSettings"],
     queryFn: getLoyaltyProg("1"),
   });
-  const mutationFn = async (body: UserLpSettingsType) => {
+  const mutationFn = async (body: LoyaltyProgramSettingsType) => {
     const data = await updateLoyaltyProg("1", body)();
     return data;
   };
@@ -21,11 +24,17 @@ const Page = () => {
     },
   });
 
-  const handleChange = async (key: UserLpSettingsKeys, value: boolean) => {
+  const handleChange = async (
+    key: LoyaltyProgramSettingsKey,
+    value: boolean
+  ) => {
     mutate({ ...loyaltyProgSettings!, [key]: value });
   };
 
-  const handleNumberChange = async (key: UserLpSettingsKeys, value: number) => {
+  const handleNumberChange = async (
+    key: LoyaltyProgramSettingsKey,
+    value: number
+  ) => {
     mutate({ ...loyaltyProgSettings!, [key]: value });
   };
 
