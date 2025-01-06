@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["msw"],
     "module": "esnext",
     "moduleResolution": "bundler",
     "baseUrl": "./",

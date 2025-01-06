@@ -1,8 +1,6 @@
 import { getUserLoyaltyProgStats } from "@/service/LoyaltyProg";
-import { LoyaltyProgramStatsType } from "@/service/LoyaltyProg/types";
 import { getUserOrderHistory } from "@/service/Order";
 import { createApiHandler, extractUserId } from "@/utils/ApiHandling";
-import { Order } from "@prisma/client";
 
 export const GET = createApiHandler<
   { userId: string }, // Params type

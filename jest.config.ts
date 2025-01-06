@@ -14,12 +14,16 @@ const config: Config = {
     "src/**/*.{js,jsx,ts,tsx}",
     "!src/**/*.d.ts",
     "!src/**/index.{js,ts}",
+    "!src/**/_app.{js,jsx,ts,tsx}",
+    "!src/**/_document.{js,jsx,ts,tsx}",
     "!src/**/*.test.{js,jsx,ts,tsx}",
     "!src/**/*.{spec,test}.{js,jsx,ts,tsx}",
     "!src/**/__mocks__/**",
   ],
   moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/src/$1", // Maps the `@/` alias to the `src/` folder
+    "^@/(.*)$": "<rootDir>/src/$1",
+    "\\.(css|scss|sass)$": "identity-obj-proxy",
+    "\\.(jpg|jpeg|png|gif|webp|svg)$": "<rootDir>/__mocks__/fileMock.js",
   },
 };
 
