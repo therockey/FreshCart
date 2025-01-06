@@ -1,6 +1,6 @@
 import { InfoCircle } from "@mynaui/icons-react";
 import { Button } from "../ui/button";
-import { OrderType } from "@/service";
+import { OrderType } from "@/service/Stock";
 
 const OrderHistoryListItem = ({ id, price, created_at }: OrderType) => {
   return (

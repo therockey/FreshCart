@@ -1,13 +1,7 @@
 import { withAPIHandler } from "./utils/withAPIHandler";
 import { FetchBuilder } from "./utils/FetchBuilder";
 import defaultMapper from "./responseMappers/defaultMapper";
-import {
-  CartWithPrice,
-  LoyaltyProgramSettingsType,
-  UserOrderHistory,
-  UserStatsLpType,
-} from "@/service";
-
+import { CartWithPrice } from "@/service/Cart/types";
 export const getCart = (customerId: string) =>
   withAPIHandler<CartWithPrice>(
     new FetchBuilder(`/api/${customerId}/cart`),

@@ -1,14 +1,19 @@
+import { addProduct, getProducts } from "@/service/Product";
+import { NewProductDTO } from "@/service/Product/types";
+import { createApiHandler } from "@/utils/ApiHandling";
 import { NextRequest } from "next/server";
-import {addProduct, getProducts, NewProductDTO} from "@/service";
 
-export async function GET(request: NextRequest) {
-  const products = await getProducts();
+export const GET = createApiHandler({
+  methodName: "GET: /products",
+  fetchData: async () => await getProducts(),
+  notFoundMessage: "Failed to find product",
+});
 
-  return Response.json(products);
-}
 
+
+//todo
 export async function POST(request: NextRequest) {
-    const res = await request.json();
-    const data = await addProduct(res as NewProductDTO);
-    return Response.json(data);
+  const res = await request.json();
+  const data = await addProduct(res as NewProductDTO);
+  return Response.json(data);
 }

@@ -1,5 +1,5 @@
 import { GET } from "@/app/api/[userId]/cart/route";
-import { getCartWithPrice } from "@/service";
+import { getCartWithPrice } from "@/service/Stock";
 import { NextRequest } from "next/server";
 
 jest.mock("@/service", () => ({
@@ -93,16 +93,6 @@ describe("GET /api/[userId]/cart", () => {
     });
   });
 });
-
-
-
-
-
-
-
-
-
-
 
 // import { prisma } from "@/lib/prisma";
 // import { getCartWithPrice } from "@/service";

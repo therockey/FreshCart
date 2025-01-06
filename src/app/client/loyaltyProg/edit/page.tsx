@@ -6,7 +6,7 @@ import { RowForNumberOptions } from "@/components/loyaltyProg/RowForNumberOption
 import {
   LoyaltyProgramSettingsKey,
   LoyaltyProgramSettingsType,
-} from "@/service";
+} from "@/service/Stock";
 
 const Page = () => {
   const { data: loyaltyProgSettings, refetch } = useQuery({

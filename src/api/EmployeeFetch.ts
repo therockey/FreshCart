@@ -1,19 +1,20 @@
-import {Depot, GetProductStockType, NewProductDTO, Product, ProductStock, UpdateStockDTO} from "@/service";
 import { withAPIHandler } from "./utils/withAPIHandler";
 import { FetchBuilder } from "./utils/FetchBuilder";
 import defaultMapper from "./responseMappers/defaultMapper";
+import { NewProductDTO, Product } from "@/service/Product/types";
+import { Depot } from "@/service/Depot/types";
+import { GetProductStockType, UpdateStockDTO } from "@/service/Stock/types";
 
-export const getProducts =
-  withAPIHandler<Product[]>(
-    new FetchBuilder(`/api/products`),
-    defaultMapper
-  );
+export const getProducts = withAPIHandler<Product[]>(
+  new FetchBuilder(`/api/products`),
+  defaultMapper
+);
 
 export const getProduct = (productId: string) =>
-    withAPIHandler<Product>(
-        new FetchBuilder(`/api/products/${productId}`),
-        defaultMapper
-    );
+  withAPIHandler<Product>(
+    new FetchBuilder(`/api/products/${productId}`),
+    defaultMapper
+  );
 
 export const getDepots = withAPIHandler<Depot[]>(
   new FetchBuilder(`/api/depots`),
@@ -37,23 +38,25 @@ export const deleteProduct = (productId: string) =>
 
 export const updateProductStock = (stock: UpdateStockDTO) =>
   withAPIHandler<UpdateStockDTO>(
-    new FetchBuilder(`/api/products/${stock.fk_product_id}/stock/${stock.fk_depot_id}`)
+    new FetchBuilder(
+      `/api/products/${stock.fk_product_id}/stock/${stock.fk_depot_id}`
+    )
       .setMethod("PUT")
       .setHeaders({ "Content-Type": "application/json" })
       .setBody({
-          quantity: stock.quantity
+        quantity: stock.quantity,
       }),
     defaultMapper
   );
 
 export const getStock = (productId: string, depotId: string) =>
-    withAPIHandler<GetProductStockType>(
-        new FetchBuilder(`/api/products/${productId}/stock/${depotId}`),
-        defaultMapper
-    );
+  withAPIHandler<GetProductStockType>(
+    new FetchBuilder(`/api/products/${productId}/stock/${depotId}`),
+    defaultMapper
+  );
 
 export const getStocks = (productId: string) =>
-    withAPIHandler<GetProductStockType[]>(
-        new FetchBuilder(`/api/products/${productId}/stock`),
-        defaultMapper
-    );
+  withAPIHandler<GetProductStockType[]>(
+    new FetchBuilder(`/api/products/${productId}/stock`),
+    defaultMapper
+  );

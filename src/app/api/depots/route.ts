@@ -1,7 +1,8 @@
-import { NextRequest } from "next/server";
-import {getDepots} from "@/service";
+import { getDepots } from "@/service/Depot";
+import { createApiHandler } from "@/utils/ApiHandling";
 
-export async function GET(request: NextRequest) {
-    const depots = await getDepots();
-    return Response.json(depots);
-}
+export const GET = createApiHandler({
+  methodName: "GET: /depots",
+  fetchData: async () => await getDepots(),
+  notFoundMessage: "Failed to find depots",
+});
