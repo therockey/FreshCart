@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ProductCategory } from "@/service/Stock";
+import { ProductCategory } from "@/service/Product/types";
 
 export const ProductDataInput: React.FC<any> = ({
   sendNext,
