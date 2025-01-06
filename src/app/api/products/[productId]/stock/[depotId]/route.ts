@@ -24,7 +24,7 @@ export const PUT = createApiHandler<
   PutBody,
   { productId: number; depotId: number; body: PutBody }
 >({
-  methodName: "GET: /products/[productId]/stock/[depotId]",
+  methodName: "PUT: /products/[productId]/stock/[depotId]",
   extractParams: ({ productId, depotId }) => ({
     productId: parseInt(productId),
     depotId: parseInt(depotId),
