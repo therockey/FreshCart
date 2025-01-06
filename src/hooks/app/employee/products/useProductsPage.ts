@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { MachineType, useCustomMachine } from "@/hooks/useCustomMachine";
 import {
   createProduct,
+  deleteProduct,
   getProducts,
   updateProductStock,
 } from "@/api/EmployeeFetch";
@@ -19,6 +20,9 @@ export const useProductsPage = () => {
     useCustomMachine(MachineType.ADD_PRODUCT);
   const addProductFormProps = useForm();
 
+  const { state: removeProductDialogState, ...removeProductEventSenders } =
+      useCustomMachine(MachineType.REMOVE_PRODUCT);
+
   const { state: updateStockDialogState, ...updateStockEventSenders } =
     useCustomMachine(MachineType.UPDATE_STOCK);
   const updateStockFormProps = useForm();
@@ -31,6 +35,11 @@ export const useProductsPage = () => {
     return data;
   };
 
+  const removeMutationFn = async (productId: number) => {
+    const data = await deleteProduct(productId.toString())();
+    return data;
+  };
+
   const updateStockMutationFn = async (body: UpdateStockDTO) => {
     const data = await updateProductStock(body)();
     return data;
@@ -38,6 +47,13 @@ export const useProductsPage = () => {
 
   const { mutate: addMutate } = useMutation({
     mutationFn: addMutationFn,
+    onSuccess: () => {
+      refetch();
+    },
+  });
+
+  const { mutate: removeMutate } = useMutation({
+    mutationFn: removeMutationFn,
     onSuccess: () => {
       refetch();
     },
@@ -55,6 +71,10 @@ export const useProductsPage = () => {
     } as NewProductDTO);
   };
 
+  const removeProduct = (productId: number) => {
+    removeMutate(productId);
+  }
+
   const updateStock = (productId: number) => {
     updateStockMutate({
       quantity: parseInt(watchUpdateStockFormProps().quantity),
@@ -66,12 +86,15 @@ export const useProductsPage = () => {
   return {
     products,
     addProductDialogState,
+    removeProductDialogState,
     updateStockDialogState,
     addProductEventSenders,
+    removeProductEventSenders,
     updateStockEventSenders,
     addProductFormProps,
     updateStockFormProps,
     addProduct,
+    removeProduct,
     updateStock,
   };
 };

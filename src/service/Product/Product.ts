@@ -39,3 +39,18 @@ export const addProduct = async (
     return null;
   }
 };
+
+export const deleteProduct = async (productId: number): Promise<Product> => {
+
+    await prisma.productStock.deleteMany({
+        where: {
+        fk_product_id: productId,
+        },
+    });
+
+    return prisma.product.delete({
+        where: {
+        id: productId,
+        },
+    });
+}

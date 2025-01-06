@@ -13,24 +13,27 @@ import {AddProductStates} from "@/xstate/addProductMachine";
 import {UpdateStockStates} from "@/xstate/updateStockMachine";
 import {ProductNameInput} from "@/components/products/add/ProductNameInput";
 import {ProductDataInput} from "@/components/products/add/ProductDataInput";
-import {Confirmation} from "@/components/products/add/Confirmation";
+import {Confirmation} from "@/components/products/Confirmation";
 import {DepotPicker} from "@/components/products/updateStock/DepotPicker";
-import {SuccessPage} from "@/components/products/add/SuccessPage";
+import {SuccessPage} from "@/components/products/SuccessPage";
 import {ChangeStock} from "@/components/products/updateStock/ChangeStock";
-import {StockUpdateSuccess} from "@/components/products/updateStock/StockUpdateSuccess";
 import {ProductInfo} from "@/components/products/ProductInfo";
 import {useProductsPage} from "@/hooks/app/employee/products/useProductsPage";
+import {RemoveProductStates} from "@/xstate/removeProductMachine";
 
 const ProductsPage = () => {
     const {
         products,
         addProductDialogState,
+        removeProductDialogState,
         updateStockDialogState,
         addProductEventSenders,
+        removeProductEventSenders,
         updateStockEventSenders,
         addProductFormProps,
         updateStockFormProps,
         addProduct,
+        removeProduct,
         updateStock,
     } = useProductsPage();
 
@@ -61,10 +64,9 @@ const ProductsPage = () => {
                             <ProductDataInput {...addProductEventSenders} {...addProductFormProps}/>
                         )}
                         {addProductDialogState === AddProductStates.CONFIRM && (
-                            <Confirmation {...addProductEventSenders} productName={addProductFormProps.watch().name}
-                                          onConfirm={addProduct}/>
+                            <Confirmation {...addProductEventSenders} prompt="Czy na pewno chcesz dodać produkt:" buttonText="Dodaj produkt" productName={addProductFormProps.watch().name} onConfirm={addProduct}/>
                         )}
-                        {addProductDialogState === AddProductStates.SUCCESS && <SuccessPage/>}
+                        {addProductDialogState === AddProductStates.SUCCESS && <SuccessPage prompt="Produkt pomyślnie dodany!"/>}
                     </DialogContent>
                 </Dialog>
             </div>
@@ -105,16 +107,27 @@ const ProductsPage = () => {
 
                                             />
                                         )}
-                                        {updateStockDialogState === UpdateStockStates.SUCCESS && <StockUpdateSuccess/>}
+                                        {updateStockDialogState === UpdateStockStates.SUCCESS && <SuccessPage prompt="Stan magazynowy zaktualizowany!"/>}
                                     </DialogContent>
                                 </Dialog>
                                 <ProductInfo productId={product.id}/>
                                 <Button size="icon" className="bg-primary h-full hover:bg-accent">
                                     <CogFour/>
                                 </Button>
-                                <Button size="icon" className="bg-primary h-full hover:bg-accent">
-                                    <Trash/>
-                                </Button>
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <Button size="icon" className="bg-primary h-full hover:bg-accent" onClick={removeProductEventSenders.resetState}>
+                                            <Trash/>
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogContent onInteractOutside={(e) => e.preventDefault()}>
+                                        {removeProductDialogState === RemoveProductStates.CONFIRM && (
+                                        <Confirmation {...removeProductEventSenders} prompt="Czy na pewno chcesz usunąć produkt:" productName={product.name} buttonText="Usuń produkt" onConfirm={() => {removeProduct(product.id);}}/>
+                                        )}
+                                        {removeProductDialogState === RemoveProductStates.SUCCESS && <SuccessPage prompt="Produkt pomyślnie usunięty!"/>}
+                                    </DialogContent>
+                                </Dialog>
+
                             </div>
                         </div>
                     ))}

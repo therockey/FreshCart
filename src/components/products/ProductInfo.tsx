@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { InfoCircle } from "@mynaui/icons-react";
-import { GetProductStockType } from "@/service/Stock";
+import { GetProductStockType } from "@/service/Stock/types";
 
 interface ProductInfoProps {
   productId: number;
@@ -22,6 +22,7 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({ productId }) => {
     isPending: isProductPending,
     error: productError,
     data: product,
+    refetch: refetchProduct
   } = useQuery({
     queryKey: ["productinfo", productId],
     queryFn: getProduct(productId.toString()),
@@ -31,13 +32,21 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({ productId }) => {
     isPending: isStockPending,
     error: stockError,
     data: stocks,
+    refetch: refetchStocks
   } = useQuery({
     queryKey: ["stockinfo", productId],
     queryFn: getStocks(productId.toString()),
   });
 
+  const handleOpenChange = (isOpen: boolean) => {
+    if (isOpen) {
+      refetchProduct();
+      refetchStocks();
+    }
+  };
+
   return (
-    <Dialog>
+    <Dialog onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button className="h-full hover:bg-accent">
           <InfoCircle />
