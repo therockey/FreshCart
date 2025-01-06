@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Depot } from "@/service/Stock";
+import { Depot } from "@/service/Depot/types";
 
 export const DepotPicker: React.FC<any> = ({ sendNext, ...rest }) => {
   const { isPending, error, data } = useQuery({

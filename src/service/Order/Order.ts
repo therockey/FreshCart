@@ -20,7 +20,7 @@ export const placeOrder = async (
   try {
     const cartData = await getCartWithPrice(userId);
     if (!cartData) throw new Error("Cart is empty");
-    const { totalPrice, cart } = cartData;
+    const { totalPrice, _ } = cartData;
     const { address } = body;
     const orderData = {
       fk_client_id: userId,
