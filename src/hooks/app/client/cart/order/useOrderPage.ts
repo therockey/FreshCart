@@ -6,7 +6,9 @@ import { placeOrder } from "@/api/CustomerFetch";
 import { useForm } from "react-hook-form";
 import { PaymentMethods } from "@/components/cart/checkout/PaymentPicker";
 import { OrderStates } from "@/xstate/orderMachine";
+import { useRouter } from "next/navigation";
 export const useOrderPage = (userId: number) => {
+  const { push } = useRouter();
   const { state, ...eventSenders } = useCustomMachine(MachineType.ORDER);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethods>(
     PaymentMethods.CREDIT_CARD
@@ -23,8 +25,12 @@ export const useOrderPage = (userId: number) => {
     mutationFn,
   });
   useEffect(() => {
+    console.log(state);
     if (state === OrderStates.SUCCESS) {
       mutate(JSON.stringify(watchFormProps()));
+    }
+    if (state === OrderStates.OVERVIEW) {
+      push("/client/cart");
     }
   }, [state]);
   return {

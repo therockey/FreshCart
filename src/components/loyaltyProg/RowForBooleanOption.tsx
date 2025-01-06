@@ -5,12 +5,14 @@ interface RowForBooleanOptionProps {
   sublabel: string;
   value: boolean;
   onChange: (value: boolean) => void;
+  disabled?: boolean;
 }
 export const RowForBooleanOption = ({
   label,
   sublabel,
   value,
   onChange,
+  disabled,
 }: RowForBooleanOptionProps) => {
   return (
     <div className="w-full flex p-5 h-36">
@@ -19,11 +21,20 @@ export const RowForBooleanOption = ({
         <p className="text-sm text-gray-500">{sublabel}</p>
       </div>
       <div className="flex flex-col ml-auto  justify-center text-center  w-36">
-        <p className="mb-4">{value ? "Włączone" : "Wyłączone"}</p>
-        <div className="flex gap-3 ">
-          <Button onClick={() => onChange(true)}>Włącz</Button>
-          <Button onClick={() => onChange(false)}>Wyłącz</Button>
-        </div>
+        {disabled ? (
+          <p className="text-sm text-gray-500">
+            Program lojalnościowy jest wyłączony
+          </p>
+        ) : (
+          <>
+            {" "}
+            <p className="mb-4">{value ? "Włączone" : "Wyłączone"}</p>
+            <div className="flex gap-3 ">
+              <Button onClick={() => onChange(true)}>Włącz</Button>
+              <Button onClick={() => onChange(false)}>Wyłącz</Button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

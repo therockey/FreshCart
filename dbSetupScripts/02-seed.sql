@@ -76,7 +76,7 @@ INSERT INTO
 VALUES
     (1, 1, 3),
     (2, 1, 2),
-    (3, 1, 1);
+    (3, 1, 7);
 
 -- Step 5: Create Loyalty Program Settings
 INSERT INTO
@@ -107,7 +107,7 @@ INSERT INTO
     )
 VALUES
     (
-        50,
+        250,
         -- Current points
         150,
         -- Total points earned

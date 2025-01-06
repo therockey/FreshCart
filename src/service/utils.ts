@@ -14,7 +14,7 @@ export const calculateDiscount = (
 ) => {
   if (pointsToSpend < threshold || initialPrice < 50)
     return { price: initialPrice, discount: 0 };
-  const discount = Math.floor(pointsToSpend / 100) * 10;
-
-  return { price: Math.min(discount, initialPrice), discount };
+  let discount = Math.floor(pointsToSpend / 100) * 10;
+  discount = Math.min(discount, initialPrice);
+  return { price: initialPrice - discount, discount };
 };

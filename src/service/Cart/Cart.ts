@@ -55,12 +55,11 @@ export const getCartWithPrice = async (
       loyaltyStats.current_pts ?? 0,
       loyaltySettings.point_threshold ?? 0
     );
-    totalPrice = price - discount;
 
     return {
-      totalPrice,
+      totalPrice: price,
       discount,
-      gainedPoints: loyaltyStats.current_pts ?? 0,
+      gainedPoints: Math.floor(price / 10),
       cart,
     };
   }

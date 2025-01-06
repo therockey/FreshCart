@@ -51,8 +51,10 @@ export const PaymentPicker: React.FC<PaymentPickerProps> = ({
   };
   return (
     <form onSubmit={handleSubmit(handlePayment)}>
-      <h2>Wybierz metodę płatności</h2>
-      <div className="my-4 flex justify-stretch bg-green-200 items-stretch">
+      <h2 className="text-2xl text-center font-bold mb-4">
+        Wybierz metodę płatności
+      </h2>
+      <div className="my-4 flex justify-center gap-[10%]  ">
         <PaymentMethodButton
           label={PaymentMethods.CREDIT_CARD}
           onClick={() => handlePaymentMethodChange(PaymentMethods.CREDIT_CARD)}
@@ -85,7 +87,7 @@ export const PaymentPicker: React.FC<PaymentPickerProps> = ({
             inputProps={register("payment", {
               required: "Numer karty jest wymagany",
               pattern: {
-                value: /^[0-9]{16}$/,
+                // value: /^[0-9]{16}$/,
                 message: "Nieprawidłowy numer karty",
               },
             })}
@@ -136,12 +138,14 @@ export const PaymentPicker: React.FC<PaymentPickerProps> = ({
         <p className="my-4">Bank details will be shared on the next step.</p>
       )}
 
-      <Button type="button" onClick={sendBack} variant="outline">
-        Back
-      </Button>
-      <Button type="submit" className="ml-2">
-        Next
-      </Button>
+      <div className="flex justify-center p-5 gap-5">
+        <Button type="button" onClick={sendBack} variant="outline">
+          Back
+        </Button>
+        <Button type="submit" className="ml-2">
+          Next
+        </Button>
+      </div>
     </form>
   );
 };

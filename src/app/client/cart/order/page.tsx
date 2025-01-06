@@ -4,7 +4,6 @@ import { OrderStates } from "@/xstate/orderMachine";
 import { AddressPicker } from "@/components/cart/checkout/AddressPicker";
 import { PaymentPicker } from "@/components/cart/checkout/PaymentPicker";
 import { SuccessPage } from "@/components/cart/checkout/SuccessPage";
-import { Overview } from "@/components/cart/checkout/Overview";
 import { useOrderPage } from "@/hooks/app/client/cart/order/useOrderPage";
 
 const Page = () => {
@@ -17,11 +16,11 @@ const Page = () => {
     setPaymentMethod,
   } = useOrderPage(1);
   return (
-    <div className="p-4">
+    <div className="p-4  w-[1200px] mx-auto">
       {state === OrderStates.ADDRESS && (
         <AddressPicker {...eventSenders} {...formProps} />
       )}
-      {state === OrderStates.OVERVIEW && <Overview {...eventSenders} />}
+      {/* {state === OrderStates.OVERVIEW && <Overview {...eventSenders} />} */}
 
       {state === OrderStates.PAYMENT && (
         <PaymentPicker

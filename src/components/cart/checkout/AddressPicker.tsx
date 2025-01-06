@@ -27,7 +27,10 @@ export const AddressPicker: React.FC<AddressPickerProps> = ({
 
   return (
     <form onSubmit={handleSubmit(handleAddress)}>
-      <div className="flex flex-col justify-center w-1/2">
+      <div className="flex flex-col justify-center w-[1200px] mx-auto">
+        <h2 className="text-2xl text-center font-bold mb-4">
+          Podaj dane kontaktowe{" "}
+        </h2>
         <div className="grid grid-cols-2 gap-10 ">
           <CustomFormField
             label="Nr domu i/lub lokalu"
@@ -68,7 +71,7 @@ export const AddressPicker: React.FC<AddressPickerProps> = ({
             {...{ className: "col-span-2" }}
           />
         </div>
-        <div className="flex justify-center mt-4">
+        <div className="flex justify-center p-5 gap-5">
           <Button type="button" onClick={sendBack} variant="outline">
             Back
           </Button>

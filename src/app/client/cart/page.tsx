@@ -31,14 +31,23 @@ const Page = () => {
             {cart && cart.totalPrice.toFixed(2)} zł
           </span>
         </h3>
-        <h3 className="text-xl ">
-          Oszczędzasz:{" "}
-          <span className="font-bold">{cart && cart.discount} zł</span>
-        </h3>
-        <h3 className="text-xl ">
-          Zyskujesz punktów:{" "}
-          <span className="font-bold">{cart && cart.gainedPoints} zł</span>
-        </h3>
+        {
+          <>
+            {" "}
+            <h3 className="text-xl ">
+              Oszczędzasz:{" "}
+              <span className="font-bold">{cart && cart.discount} zł</span>
+            </h3>
+            <h3 className="text-xl ">
+              Wykorzystujesz punkty lojalnościowe:{" "}
+              <span className="font-bold">{cart && cart.discount * 10}</span>
+            </h3>
+            <h3 className="text-xl ">
+              Zyskujesz punkty lojalnościowe:{" "}
+              <span className="font-bold">{cart && cart.gainedPoints}</span>
+            </h3>
+          </>
+        }
       </div>
       <Button
         variant="default"

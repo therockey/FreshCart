@@ -11,7 +11,7 @@ const CartListItem = ({ name, price, quantity }: CartListItemProps) => {
     <div className="flex justify-center  text-center w-full items-center px-[1rem] h-20 ">
       <h2 className="text-xl mr-[3rem]">{name}</h2>
       <div className="flex ">
-        <p>{price} zł</p>
+        <p>{price * quantity} zł</p>
       </div>
       <div className="ml-auto flex h-full items-center align-middle gap-5">
         <p className="mr-5">Sztuki: {quantity}</p>

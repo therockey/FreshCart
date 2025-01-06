@@ -22,29 +22,44 @@ const Page = () => {
       </h2>
 
       <RowForBooleanOption
-        label={"greedy"}
-        sublabel={"Description for greedy"}
+        label={"Zachłanne wydawanie punktów"}
+        sublabel={"Wydawaj punkty od razu po ich zdobyciu"}
         value={loyaltyProgSettings.is_greedy ?? false}
         onChange={(arg) => handleChange("is_greedy", arg)}
+        disabled={!loyaltyProgSettings.is_active}
       />
 
       <RowForNumberOptions
-        label="Punkty do skumulowania"
-        sublabel="Ilość punktów, po której klient dostaje nagrodę"
-        value={loyaltyProgSettings.point_threshold ?? 0}
+        label="Kumulowanie Punktów"
+        sublabel="Wydawaj punkty dopiero po osiągnięciu określonego progu"
+        value={
+          loyaltyProgSettings.is_greedy || !loyaltyProgSettings.is_active
+            ? 0
+            : loyaltyProgSettings.point_threshold ?? 0
+        }
         onChange={(arg) => handleNumberChange("point_threshold", arg)}
+        disabled={
+          (loyaltyProgSettings.is_greedy || !loyaltyProgSettings.is_active) ??
+          undefined
+        }
+        errorMessage={
+          loyaltyProgSettings.is_active
+            ? "Wydawanie zachłanne włączone"
+            : "Program lojalnościowy jest wyłączony"
+        }
       />
 
       <RowForBooleanOption
-        label={"useFreeDelivery"}
-        sublabel={"Description for useFreeDelivery"}
+        label={"Darmowa dostawa"}
+        sublabel={"Darmowa dostawa dla klientów z aktywnym programem lojalnościowym przy zakupach powyżej 200 zł"}
         value={loyaltyProgSettings.free_delivery ?? false}
         onChange={(arg) => handleChange("free_delivery", arg)}
+        disabled={!loyaltyProgSettings.is_active}
       />
 
       <RowForBooleanOption
-        label={"switchOffProg"}
-        sublabel={"Description for switchOffProg"}
+        label={"Włącz program lojalnościowy"}
+        sublabel={""}
         value={loyaltyProgSettings.is_active ?? false}
         onChange={(arg) => handleChange("is_active", arg)}
       />
