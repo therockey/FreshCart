@@ -1,44 +1,20 @@
 "use client";
-import { getLoyaltyProg, updateLoyaltyProg } from "@/api/CustomerFetch";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { ErrorView } from "@/components/commons/ErrorView";
+import { Loader } from "@/components/commons/Loader";
 import { RowForBooleanOption } from "@/components/loyaltyProg/RowForBooleanOption";
 import { RowForNumberOptions } from "@/components/loyaltyProg/RowForNumberOption";
-import {
-  LoyaltyProgramSettingsKey,
-  LoyaltyProgramSettingsType,
-} from "@/service/Stock";
+import { useLoyaltyEditPage } from "@/hooks/app/client/loyaltyProg/edit/useLoyaltyProgEditPage";
 
 const Page = () => {
-  const { data: loyaltyProgSettings, refetch } = useQuery({
-    queryKey: ["loyaltyProgSettings"],
-    queryFn: getLoyaltyProg("1"),
-  });
-  const mutationFn = async (body: LoyaltyProgramSettingsType) => {
-    const data = await updateLoyaltyProg("1", body)();
-    return data;
-  };
-  const { mutate } = useMutation({
-    mutationFn: mutationFn,
-    onSuccess: () => {
-      refetch();
-    },
-  });
-
-  const handleChange = async (
-    key: LoyaltyProgramSettingsKey,
-    value: boolean
-  ) => {
-    mutate({ ...loyaltyProgSettings!, [key]: value });
-  };
-
-  const handleNumberChange = async (
-    key: LoyaltyProgramSettingsKey,
-    value: number
-  ) => {
-    mutate({ ...loyaltyProgSettings!, [key]: value });
-  };
-
-  if (!loyaltyProgSettings) return null;
+  const {
+    loyaltyProgSettings,
+    handleChange,
+    handleNumberChange,
+    error,
+    isFetching,
+  } = useLoyaltyEditPage(1);
+  if (isFetching) return <Loader />;
+  if (error || !loyaltyProgSettings) return <ErrorView />;
   return (
     <div className="mx-auto max-w-[1200px] flex flex-col justify-center items-center p-5 gap-5">
       <h2 className="text-3xl font-bold w-[50%] text-center my-5">

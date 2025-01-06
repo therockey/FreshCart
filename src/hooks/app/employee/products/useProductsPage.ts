@@ -6,7 +6,8 @@ import {
   updateProductStock,
 } from "@/api/EmployeeFetch";
 import { useForm } from "react-hook-form";
-import { NewProductDTO, UpdateStockDTO } from "@/service/Stock";
+import { NewProductDTO } from "@/service/Product/types";
+import { UpdateStockDTO } from "@/service/Stock/types";
 
 export const useProductsPage = () => {
   const { data: products, refetch } = useQuery({

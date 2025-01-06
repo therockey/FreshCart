@@ -1,6 +1,8 @@
 import { getUserLoyaltyProgStats } from "@/service/LoyaltyProg";
+import { LoyaltyProgramStatsType } from "@/service/LoyaltyProg/types";
 import { getUserOrderHistory } from "@/service/Order";
 import { createApiHandler, extractUserId } from "@/utils/ApiHandling";
+import { Order } from "@prisma/client";
 
 export const GET = createApiHandler<
   { userId: string }, // Params type
@@ -10,12 +12,12 @@ export const GET = createApiHandler<
   methodName: "GET: /[userId]/loyaltyProg/stats",
   extractParams: extractUserId,
   fetchData: async ({ userId }) => {
-    const [userLoyaltyProgStats, userOrderHistory] = await Promise.all([
+    const [loyaltyProgStats, orderHistory] = await Promise.all([
       getUserLoyaltyProgStats(userId),
       getUserOrderHistory(userId),
     ]);
-
-    return { userLoyaltyProgStats, userOrderHistory };
+    if (!loyaltyProgStats && !orderHistory) return null;
+    return { loyaltyProgStats, orderHistory };
   },
   notFoundMessage: "Loyalty program stats not found for the given userId.",
 });

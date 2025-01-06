@@ -1,0 +1,1 @@
+export const ErrorView=()=><div> error</div>

@@ -1,18 +1,16 @@
 "use client";
-import { getCart } from "@/api/CustomerFetch";
 import CartListItem from "@/components/cart/CartListItem";
+import { ErrorView } from "@/components/commons/ErrorView";
+import { Loader } from "@/components/commons/Loader";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useQuery } from "@tanstack/react-query";
+import { useCartPage } from "@/hooks/app/client/cart/useCartPage";
 import Link from "next/link";
 
 const Page = () => {
-  const { data: cart } = useQuery({
-    queryKey: ["cart"],
-    queryFn: getCart("1"),
-  });
-
-  console.log(cart);
+  const { data: cart, error, isFetching } = useCartPage(1);
+  if (isFetching) return <Loader />;
+  if (error || !cart) return <ErrorView />;
   return (
     <div className="flex justify-center flex-col  text-center p-5 max-w-[1200px] mx-auto">
       <h2 className="text-4xl font-bold mb-4">Twój koszyk</h2>
