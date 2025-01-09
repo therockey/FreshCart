@@ -20,6 +20,7 @@ import {ChangeStock} from "@/components/products/updateStock/ChangeStock";
 import {ProductInfo} from "@/components/products/ProductInfo";
 import {useProductsPage} from "@/hooks/app/employee/products/useProductsPage";
 import {RemoveProductStates} from "@/xstate/removeProductMachine";
+import {Loader} from "@/components/commons/Loader";
 
 const ProductsPage = () => {
     const {
@@ -38,7 +39,7 @@ const ProductsPage = () => {
     } = useProductsPage();
 
     return (
-        <div className="p-5">
+        <div className="p-5 flex flex-col flex-grow">
             <div className="flex w-full items-center space-x-10">
                 <div className="flex w-full items-center space-x-2">
                     <Input type="search" placeholder="ID lub nazwa produktu"/>
@@ -64,14 +65,18 @@ const ProductsPage = () => {
                             <ProductDataInput {...addProductEventSenders} {...addProductFormProps}/>
                         )}
                         {addProductDialogState === AddProductStates.CONFIRM && (
-                            <Confirmation {...addProductEventSenders} prompt="Czy na pewno chcesz dodać produkt:" buttonText="Dodaj produkt" productName={addProductFormProps.watch().name} onConfirm={addProduct}/>
+                            <Confirmation {...addProductEventSenders} prompt="Czy na pewno chcesz dodać produkt:"
+                                          buttonText="Dodaj produkt" productName={addProductFormProps.watch().name}
+                                          onConfirm={addProduct}/>
                         )}
-                        {addProductDialogState === AddProductStates.SUCCESS && <SuccessPage prompt="Produkt pomyślnie dodany!"/>}
+                        {addProductDialogState === AddProductStates.SUCCESS &&
+                            <SuccessPage prompt="Produkt pomyślnie dodany!"/>}
                     </DialogContent>
                 </Dialog>
             </div>
 
-            <div className="flex flex-col gap-2 py-8">
+            <div className="flex flex-col gap-2 py-8 flex-grow">
+                {!products && <Loader/>}
                 {products &&
                     products.map((product) => (
                         <div
@@ -107,7 +112,8 @@ const ProductsPage = () => {
 
                                             />
                                         )}
-                                        {updateStockDialogState === UpdateStockStates.SUCCESS && <SuccessPage prompt="Stan magazynowy zaktualizowany!"/>}
+                                        {updateStockDialogState === UpdateStockStates.SUCCESS &&
+                                            <SuccessPage prompt="Stan magazynowy zaktualizowany!"/>}
                                     </DialogContent>
                                 </Dialog>
                                 <ProductInfo productId={product.id}/>
@@ -116,15 +122,22 @@ const ProductsPage = () => {
                                 </Button>
                                 <Dialog>
                                     <DialogTrigger asChild>
-                                        <Button size="icon" className="bg-primary h-full hover:bg-accent" onClick={removeProductEventSenders.resetState}>
+                                        <Button size="icon" className="bg-primary h-full hover:bg-accent"
+                                                onClick={removeProductEventSenders.resetState}>
                                             <Trash/>
                                         </Button>
                                     </DialogTrigger>
                                     <DialogContent onInteractOutside={(e) => e.preventDefault()}>
                                         {removeProductDialogState === RemoveProductStates.CONFIRM && (
-                                        <Confirmation {...removeProductEventSenders} prompt="Czy na pewno chcesz usunąć produkt:" productName={product.name} buttonText="Usuń produkt" onConfirm={() => {removeProduct(product.id);}}/>
+                                            <Confirmation {...removeProductEventSenders}
+                                                          prompt="Czy na pewno chcesz usunąć produkt:"
+                                                          productName={product.name} buttonText="Usuń produkt"
+                                                          onConfirm={() => {
+                                                              removeProduct(product.id);
+                                                          }}/>
                                         )}
-                                        {removeProductDialogState === RemoveProductStates.SUCCESS && <SuccessPage prompt="Produkt pomyślnie usunięty!"/>}
+                                        {removeProductDialogState === RemoveProductStates.SUCCESS &&
+                                            <SuccessPage prompt="Produkt pomyślnie usunięty!"/>}
                                     </DialogContent>
                                 </Dialog>
 

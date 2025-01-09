@@ -36,7 +36,7 @@ export const Confirmation: React.FC<ConfirmationProps> = ({
                 </div>
                 <div className="flex flex-row justify-between">
                     <DialogClose asChild>
-                        <Button variant="outline" className="hover:bg-accent w-40">
+                        <Button variant="outline" className="hover:bg-gray-200 w-40">
                             Anuluj
                         </Button>
                     </DialogClose>

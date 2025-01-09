@@ -32,7 +32,7 @@ const Page = () => {
           />
         </div>
       )}
-      <Button asChild variant="default" className="mx-auto">
+      <Button asChild variant="default" className="mx-auto hover:bg-accent">
         <Link href={"loyaltyProg/edit"}>Edytuj program lojalnościowy</Link>
       </Button>
       <h3 className="text-3xl font-bold my-10">Historia zamówień</h3>

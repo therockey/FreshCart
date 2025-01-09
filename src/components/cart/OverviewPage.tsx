@@ -13,7 +13,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
 }) => {
   return (
     <div>
-      <Button onClick={sendBack} variant="outline">
+      <Button onClick={sendBack} variant="outline" className="hover:bg-gray-200">
         Back
       </Button>
       <Button onClick={sendNext} className="ml-2">

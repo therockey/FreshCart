@@ -30,8 +30,8 @@ export const RowForBooleanOption = ({
             {" "}
             <p className="mb-4">{value ? "Włączone" : "Wyłączone"}</p>
             <div className="flex gap-3 ">
-              <Button onClick={() => onChange(true)}>Włącz</Button>
-              <Button onClick={() => onChange(false)}>Wyłącz</Button>
+              <Button onClick={() => onChange(true)} className="hover:bg-accent">Włącz</Button>
+              <Button onClick={() => onChange(false)} className="hover:bg-accent">Wyłącz</Button>
             </div>
           </>
         )}

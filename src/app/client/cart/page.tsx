@@ -51,7 +51,7 @@ const Page = () => {
       </div>
       <Button
         variant="default"
-        className="flex-grow-0 flex-none w- mx-auto my-[2rem]"
+        className="flex-grow-0 flex-none w- mx-auto my-[2rem] hover:bg-accent"
         asChild
       >
         <Link href="cart/order">Złóż zamówienie</Link>

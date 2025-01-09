@@ -72,10 +72,10 @@ export const AddressPicker: React.FC<AddressPickerProps> = ({
           />
         </div>
         <div className="flex justify-center p-5 gap-5">
-          <Button type="button" onClick={sendBack} variant="outline">
+          <Button type="button" onClick={sendBack} variant="outline" className="hover:bg-gray-200">
             Back
           </Button>
-          <Button type="submit" className="ml-2">
+          <Button type="submit" className="ml-2 hover:bg-accent">
             Next
           </Button>
         </div>

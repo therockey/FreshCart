@@ -43,7 +43,7 @@ export const RowForNumberOptions = ({
             />
             <Button
               onClick={handleSave}
-              className="mt-2 w-20"
+              className="mt-2 w-20 hover:bg-accent"
               disabled={disabled}
             >
               Save

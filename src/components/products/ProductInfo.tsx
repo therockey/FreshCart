@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { InfoCircle } from "@mynaui/icons-react";
 import { GetProductStockType } from "@/service/Stock/types";
+import {Loader} from "@/components/commons/Loader";
 
 interface ProductInfoProps {
   productId: number;
@@ -60,6 +61,7 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({ productId }) => {
           <DialogTitle>Informacje o produkcie</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col content-center space-y-4 px-10">
+          {isProductPending && <Loader/>}
           {product && (
             <>
               <div className="flex flex-col space-y-0.5">
@@ -86,6 +88,7 @@ export const ProductInfo: React.FC<ProductInfoProps> = ({ productId }) => {
           )}
           <div>
             <div className="font-bold">Stan magazynowy:</div>
+            {isStockPending && <Loader/>}
             {stocks?.map((stock: GetProductStockType) => (
               <div key={stock?.id} className="flex flex-row justify-between">
                 <div>{stock?.Depot.name}</div>

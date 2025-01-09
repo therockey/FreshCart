@@ -8,7 +8,7 @@ const OrderHistoryListItem = ({ id, price, created_at }: Order) => {
       <h2 className="text-xl mr-[3rem]">Zamówienie {id}</h2>
       <p className="text-xl mr-[3rem]">{price} zł</p>
       {/* <p className="text-xl mr-[3rem]">{created_at.toString()}</p> */}
-      <Button variant="ghost" size="icon" className="text-4xl  ml-auto">
+      <Button variant="ghost" size="icon" className="text-4xl ml-auto hover:bg-gray-200">
         <InfoCircle />
       </Button>
     </div>
